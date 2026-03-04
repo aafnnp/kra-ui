@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "NativeUI Example",
+    "slug": "native-ui-example",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "native-ui-example",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "com.nativeui.example",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.nativeui.example",
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "plugins": ["expo-router"]
+  }
+}

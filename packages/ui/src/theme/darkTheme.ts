@@ -1,0 +1,215 @@
+import {createTheme} from '@shopify/restyle';
+import {palette} from './palette';
+import type {Theme} from './theme';
+
+/**
+ * 暗色主题
+ * 结构与浅色主题一致，仅替换色值
+ */
+const darkTheme = createTheme<Theme>({
+  colors: {
+    mainBackground: palette.gray900,
+    cardBackground: palette.gray800,
+    inputBackground: palette.gray700,
+
+    textPrimary: palette.gray50,
+    textSecondary: palette.gray300,
+    textMuted: palette.gray500,
+    textInverse: palette.gray900,
+
+    primary: palette.primary300,
+    primaryLight: palette.primary900,
+    primaryDark: palette.primary100,
+
+    secondary: palette.secondary300,
+    secondaryLight: palette.secondary900,
+    secondaryDark: palette.secondary100,
+
+    success: palette.success300,
+    successLight: palette.success900,
+    warning: palette.warning300,
+    warningLight: palette.warning900,
+    error: palette.error300,
+    errorLight: palette.error900,
+
+    border: palette.gray600,
+    borderFocus: palette.primary300,
+
+    divider: palette.gray600,
+
+    overlay: 'rgba(0, 0, 0, 0.6)',
+
+    transparent: palette.transparent,
+  },
+
+  spacing: {
+    '0': 0,
+    xs: 4,
+    s: 8,
+    m: 16,
+    l: 24,
+    xl: 32,
+    xxl: 48,
+  },
+
+  borderRadii: {
+    none: 0,
+    xs: 2,
+    s: 4,
+    m: 8,
+    l: 12,
+    xl: 16,
+    full: 9999,
+  },
+
+  breakpoints: {
+    phone: 0,
+    tablet: 768,
+  },
+
+  textVariants: {
+    defaults: {
+      color: 'textPrimary',
+      fontSize: 16,
+      lineHeight: 24,
+    },
+    header: {
+      fontSize: 34,
+      fontWeight: 'bold',
+      lineHeight: 42,
+      color: 'textPrimary',
+    },
+    subheader: {
+      fontSize: 24,
+      fontWeight: '600',
+      lineHeight: 32,
+      color: 'textPrimary',
+    },
+    body: {
+      fontSize: 16,
+      lineHeight: 24,
+      color: 'textPrimary',
+    },
+    caption: {
+      fontSize: 12,
+      lineHeight: 16,
+      color: 'textSecondary',
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: '600',
+      lineHeight: 20,
+      color: 'textPrimary',
+    },
+  },
+
+  buttonVariants: {
+    defaults: {
+      paddingVertical: 's',
+      paddingHorizontal: 'm',
+      borderRadius: 'm',
+    },
+    filled: {
+      backgroundColor: 'primary',
+    },
+    outline: {
+      backgroundColor: 'transparent',
+      borderWidth: 1,
+      borderColor: 'primary',
+    },
+    ghost: {
+      backgroundColor: 'transparent',
+    },
+    danger: {
+      backgroundColor: 'error',
+    },
+  },
+
+  cardVariants: {
+    defaults: {
+      padding: 'm',
+      borderRadius: 'l',
+      backgroundColor: 'cardBackground',
+    },
+    elevated: {
+      shadowColor: 'textPrimary',
+      shadowOffset: {width: 0, height: 2},
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+      elevation: 3,
+    },
+    outline: {
+      borderWidth: 1,
+      borderColor: 'border',
+    },
+    filled: {
+      backgroundColor: 'primaryLight',
+    },
+  },
+
+  badgeVariants: {
+    defaults: {
+      paddingVertical: 'xs',
+      paddingHorizontal: 's',
+      borderRadius: 's',
+    },
+    solid: {
+      backgroundColor: 'primary',
+    },
+    subtle: {
+      backgroundColor: 'primaryLight',
+    },
+    outline: {
+      backgroundColor: 'transparent',
+      borderWidth: 1,
+      borderColor: 'primary',
+    },
+  },
+
+  inputVariants: {
+    defaults: {
+      padding: 's',
+      borderRadius: 'm',
+      fontSize: 16,
+      color: 'textPrimary',
+    },
+    outline: {
+      borderWidth: 1,
+      borderColor: 'border',
+      backgroundColor: 'inputBackground',
+    },
+    filled: {
+      backgroundColor: 'primaryLight',
+      borderWidth: 0,
+    },
+    underline: {
+      borderBottomWidth: 1,
+      borderColor: 'border',
+      borderRadius: 'none',
+      paddingHorizontal: 0,
+    },
+  },
+
+  alertVariants: {
+    defaults: {
+      padding: 'm',
+      borderRadius: 'm',
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
+    },
+    info: {
+      backgroundColor: 'primaryLight',
+    },
+    success: {
+      backgroundColor: 'successLight',
+    },
+    warning: {
+      backgroundColor: 'warningLight',
+    },
+    error: {
+      backgroundColor: 'errorLight',
+    },
+  },
+});
+
+export default darkTheme;

@@ -1,0 +1,63 @@
+import {defineConfig} from 'vitepress';
+
+export default defineConfig({
+  title: 'NativeUI',
+  description: '基于 @shopify/restyle 的 React Native UI 组件库',
+  lang: 'zh-CN',
+  themeConfig: {
+    nav: [
+      {text: '指南', link: '/guide/getting-started'},
+      {text: '组件', link: '/guide/components/box'},
+    ],
+    sidebar: [
+      {
+        text: '开始',
+        items: [
+          {text: '快速开始', link: '/guide/getting-started'},
+          {text: '主题配置', link: '/guide/theme'},
+        ],
+      },
+      {
+        text: '布局',
+        items: [
+          {text: 'Box', link: '/guide/components/box'},
+          {text: 'Flex', link: '/guide/components/flex'},
+          {text: 'Stack', link: '/guide/components/stack'},
+          {text: 'Center', link: '/guide/components/center'},
+          {text: 'Divider', link: '/guide/components/divider'},
+        ],
+      },
+      {
+        text: '排版',
+        items: [
+          {text: 'Text', link: '/guide/components/text'},
+          {text: 'Heading', link: '/guide/components/heading'},
+        ],
+      },
+      {
+        text: '表单',
+        items: [
+          {text: 'Button', link: '/guide/components/button'},
+          {text: 'Input', link: '/guide/components/input'},
+          {text: 'Switch', link: '/guide/components/switch'},
+        ],
+      },
+      {
+        text: '数据展示',
+        items: [
+          {text: 'Badge', link: '/guide/components/badge'},
+          {text: 'Card', link: '/guide/components/card'},
+          {text: 'Avatar', link: '/guide/components/avatar'},
+        ],
+      },
+      {
+        text: '反馈',
+        items: [
+          {text: 'Spinner', link: '/guide/components/spinner'},
+          {text: 'Alert', link: '/guide/components/alert'},
+        ],
+      },
+    ],
+    socialLinks: [{icon: 'github', link: 'https://github.com/user/native-ui'}],
+  },
+});
