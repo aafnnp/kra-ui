@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { ScrollArea } from '@native-ui/ui';
+import { ScrollArea } from 'native-ui';
 ```
 
 ## 基本用法

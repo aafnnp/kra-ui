@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Avatar } from '@native-ui/ui';
+import { Avatar } from 'native-ui';
 ```
 
 ## 基本用法

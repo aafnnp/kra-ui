@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Checkbox } from '@native-ui/ui';
+import { Checkbox } from 'native-ui';
 ```
 
 ## 基本用法

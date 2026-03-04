@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Switch } from '@native-ui/ui';
+import { Switch } from 'native-ui';
 ```
 
 ## 基本用法

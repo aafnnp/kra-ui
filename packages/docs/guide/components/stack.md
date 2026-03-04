@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Stack, HStack, VStack } from '@native-ui/ui';
+import { Stack, HStack, VStack } from 'native-ui';
 ```
 
 ## 基本用法

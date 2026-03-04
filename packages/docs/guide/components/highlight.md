@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Highlight } from '@native-ui/ui';
+import { Highlight } from 'native-ui';
 ```
 
 ## 基本用法

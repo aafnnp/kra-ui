@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Center } from '@native-ui/ui';
+import { Center } from 'native-ui';
 ```
 
 ## 基本用法

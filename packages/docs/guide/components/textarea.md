@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Textarea } from '@native-ui/ui';
+import { Textarea } from 'native-ui';
 ```
 
 ## 基本用法

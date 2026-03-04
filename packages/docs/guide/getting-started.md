@@ -4,13 +4,13 @@
 
 ```bash
 # 使用 pnpm
-pnpm add @native-ui/ui @shopify/restyle
+pnpm add native-ui @shopify/restyle
 
 # 使用 yarn
-yarn add @native-ui/ui @shopify/restyle
+yarn add native-ui @shopify/restyle
 
 # 使用 npm
-npm install @native-ui/ui @shopify/restyle
+npm install native-ui @shopify/restyle
 ```
 
 ## 基本用法
@@ -18,7 +18,7 @@ npm install @native-ui/ui @shopify/restyle
 在应用根组件中使用 `NativeUIProvider`：
 
 ```tsx
-import {NativeUIProvider} from '@native-ui/ui';
+import {NativeUIProvider} from 'native-ui';
 
 export default function App() {
   return (
@@ -32,7 +32,7 @@ export default function App() {
 ## 使用组件
 
 ```tsx
-import {Box, Text, Button, Card} from '@native-ui/ui';
+import {Box, Text, Button, Card} from 'native-ui';
 
 function MyScreen() {
   return (
@@ -59,7 +59,7 @@ function MyScreen() {
 通过 `useColorMode` hook 切换主题：
 
 ```tsx
-import {useColorMode, Button} from '@native-ui/ui';
+import {useColorMode, Button} from 'native-ui';
 
 function ThemeToggle() {
   const {colorMode, toggleColorMode} = useColorMode();
@@ -79,7 +79,7 @@ function ThemeToggle() {
 
 ```tsx
 import {createTheme} from '@shopify/restyle';
-import {NativeUIProvider, theme as defaultTheme} from '@native-ui/ui';
+import {NativeUIProvider, theme as defaultTheme} from 'native-ui';
 
 const customTheme = createTheme({
   ...defaultTheme,

@@ -7,5 +7,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@native-ui/example", "@native-ui/docs"]
+  "ignore": ["native-ui-example", "native-ui-docs"]
 }

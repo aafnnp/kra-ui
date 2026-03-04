@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Radio, RadioGroup } from '@native-ui/ui';
+import { Radio, RadioGroup } from 'native-ui';
 ```
 
 ## 基本用法

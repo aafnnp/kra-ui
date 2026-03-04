@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Spinner } from '@native-ui/ui';
+import { Spinner } from 'native-ui';
 ```
 
 ## 基本用法

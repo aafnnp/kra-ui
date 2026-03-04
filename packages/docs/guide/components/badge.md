@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Badge } from '@native-ui/ui';
+import { Badge } from 'native-ui';
 ```
 
 ## 基本用法

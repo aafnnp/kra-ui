@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Flex } from '@native-ui/ui';
+import { Flex } from 'native-ui';
 ```
 
 ## 基本用法

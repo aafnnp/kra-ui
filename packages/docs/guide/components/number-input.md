@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { NumberInput } from '@native-ui/ui';
+import { NumberInput } from 'native-ui';
 ```
 
 ## 基本用法

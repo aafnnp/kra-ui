@@ -1,5 +1,5 @@
 import {Slot} from 'expo-router';
-import {NativeUIProvider} from '@native-ui/ui';
+import {NativeUIProvider} from 'native-ui';
 
 export default function RootLayout() {
   return (

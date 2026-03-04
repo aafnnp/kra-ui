@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { AspectRatio } from '@native-ui/ui';
+import { AspectRatio } from 'native-ui';
 ```
 
 ## 基本用法

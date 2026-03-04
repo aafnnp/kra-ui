@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Separator } from '@native-ui/ui';
+import { Separator } from 'native-ui';
 ```
 
 ## 基本用法

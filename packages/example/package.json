@@ -1,5 +1,5 @@
 {
-  "name": "@native-ui/example",
+  "name": "native-ui-example",
   "version": "0.1.0",
   "private": true,
   "main": "expo-router/entry",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.0",
-    "@native-ui/ui": "workspace:*",
+    "native-ui": "workspace:*",
     "@react-navigation/bottom-tabs": "^7.15.5",
     "@react-navigation/native": "^7.1.33",
     "@shopify/restyle": "^2.4.4",

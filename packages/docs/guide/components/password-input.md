@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { PasswordInput } from '@native-ui/ui';
+import { PasswordInput } from 'native-ui';
 ```
 
 ## 基本用法

@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { SegmentedControl } from '@native-ui/ui';
+import { SegmentedControl } from 'native-ui';
 ```
 
 ## 基本用法

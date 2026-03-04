@@ -35,7 +35,7 @@ import {
   Rating,
   SegmentedControl,
   Textarea,
-} from '@native-ui/ui';
+} from 'native-ui';
 
 /** 各组件分区展示 */
 function Section({title, children}: {title: string; children: React.ReactNode}) {
@@ -103,7 +103,7 @@ export default function HomeScreen() {
           <Section title="行内代码 Code">
             <VStack space="s">
               <Code>const x = 42;</Code>
-              <Code>npm install @native-ui/ui</Code>
+              <Code>npm install native-ui</Code>
             </VStack>
           </Section>
 

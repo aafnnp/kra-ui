@@ -5,7 +5,7 @@
 ## 引入
 
 ```tsx
-import { Divider } from '@native-ui/ui';
+import { Divider } from 'native-ui';
 ```
 
 ## 基本用法
