@@ -7,9 +7,13 @@
     "dev:docs": "pnpm --filter @native-ui/docs dev",
     "build:docs": "pnpm --filter @native-ui/docs build",
     "lint": "pnpm -r lint",
-    "clean": "pnpm -r clean"
+    "clean": "pnpm -r clean",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.30.0",
     "typescript": "~5.3.3"
   },
   "engines": {

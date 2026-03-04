@@ -4,6 +4,7 @@ export default defineConfig({
   title: 'NativeUI',
   description: '基于 @shopify/restyle 的 React Native UI 组件库',
   lang: 'zh-CN',
+  base: '/native-ui/',
   themeConfig: {
     nav: [
       {text: '指南', link: '/guide/getting-started'},

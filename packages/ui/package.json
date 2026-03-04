@@ -25,6 +25,9 @@
     "components"
   ],
   "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "peerDependencies": {
     "@shopify/restyle": ">=2.0.0",
     "react": ">=18.0.0",
