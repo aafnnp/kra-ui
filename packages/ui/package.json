@@ -26,7 +26,8 @@
   ],
   "license": "MIT",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
   "peerDependencies": {
     "@shopify/restyle": ">=2.0.0",
