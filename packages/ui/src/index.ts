@@ -111,3 +111,15 @@ export type {AlertProps} from './components/Alert';
 
 export {default as Modal, ModalHeader, ModalBody, ModalFooter} from './components/Modal';
 export type {ModalProps, ModalHeaderProps, ModalBodyProps, ModalFooterProps} from './components/Modal';
+
+export {default as Popup} from './components/Popup';
+export type {PopupProps} from './components/Popup';
+
+export {default as Toast} from './components/Toast';
+export type {ToastProps} from './components/Toast';
+
+export {default as Tabs} from './components/Tabs';
+export type {TabsProps, TabItem} from './components/Tabs';
+
+export {default as Dropdown} from './components/Dropdown';
+export type {DropdownProps, DropdownItem} from './components/Dropdown';

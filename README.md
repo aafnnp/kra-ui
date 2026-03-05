@@ -21,13 +21,13 @@
 
 ## 组件列表
 
-| 布局 | 表单 | 数据展示 | 反馈 | 其他 |
+| 布局 | 表单 | 数据展示 | 反馈 | 导航/其他 |
 | --- | --- | --- | --- | --- |
 | Box | Button | Avatar | Alert | Accordion |
 | Flex | Checkbox | Badge | Spinner | Modal |
-| Grid | Input | Card | Rating | - |
-| Stack | NumberInput | Code | - | - |
-| Center | PasswordInput | Heading | - | - |
+| Grid | Input | Card | Rating | Popup |
+| Stack | NumberInput | Code | Toast | Tabs |
+| Center | PasswordInput | Heading | - | Dropdown |
 | Group | PinInput | Highlight | - | - |
 | AspectRatio | Radio | List | - | - |
 | ScrollArea | SegmentedControl | Separator | - | - |

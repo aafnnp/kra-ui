@@ -69,11 +69,20 @@ export default defineConfig({
         ],
       },
       {
+        text: "数据导航",
+        items: [
+          { text: "Tabs", link: "/guide/components/tabs" },
+          { text: "Dropdown", link: "/guide/components/dropdown" },
+        ],
+      },
+      {
         text: "反馈",
         items: [
           { text: "Spinner", link: "/guide/components/spinner" },
           { text: "Alert", link: "/guide/components/alert" },
           { text: "Modal", link: "/guide/components/modal" },
+          { text: "Popup", link: "/guide/components/popup" },
+          { text: "Toast", link: "/guide/components/toast" },
         ],
       },
     ],

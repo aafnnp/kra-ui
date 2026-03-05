@@ -1,10 +1,10 @@
-import { Slot } from "expo-router"
+import { Stack } from "expo-router"
 import { NativeUIProvider } from "kra-ui"
 
 export default function RootLayout() {
   return (
     <NativeUIProvider>
-      <Slot />
+      <Stack screenOptions={{ headerShown: false }} />
     </NativeUIProvider>
   )
 }
