@@ -12,6 +12,7 @@ import {
   Avatar,
   Spinner,
   Alert,
+  Modal,
   Flex,
   HStack,
   VStack,
@@ -65,6 +66,8 @@ export default function HomeScreen() {
   const [pinValue, setPinValue] = useState("")
   const [segmentValue, setSegmentValue] = useState("all")
   const [textareaValue, setTextareaValue] = useState("")
+  const [modalVisible, setModalVisible] = useState(false)
+  const [modalSize, setModalSize] = useState<"sm" | "md" | "lg">("md")
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -604,6 +607,70 @@ export default function HomeScreen() {
                 description="操作失败，请重试"
               />
             </VStack>
+          </Section>
+
+          <Divider />
+
+          {/* 弹窗 */}
+          <Section title="弹窗 Modal">
+            <VStack space="s">
+              <HStack space="s">
+                <Button
+                  label="小弹窗"
+                  variant="outline"
+                  size="sm"
+                  onPress={() => {
+                    setModalSize("sm")
+                    setModalVisible(true)
+                  }}
+                />
+                <Button
+                  label="中弹窗"
+                  variant="outline"
+                  size="sm"
+                  onPress={() => {
+                    setModalSize("md")
+                    setModalVisible(true)
+                  }}
+                />
+                <Button
+                  label="大弹窗"
+                  variant="outline"
+                  size="sm"
+                  onPress={() => {
+                    setModalSize("lg")
+                    setModalVisible(true)
+                  }}
+                />
+              </HStack>
+            </VStack>
+
+            <Modal
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              size={modalSize}
+            >
+              <Modal.Header title={`${modalSize.toUpperCase()} 尺寸弹窗`} />
+              <Modal.Body>
+                <Text variant="body">
+                  这是一个 {modalSize} 尺寸的模态弹窗示例，点击遮罩或关闭按钮可以关闭。
+                </Text>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  label="取消"
+                  variant="outline"
+                  size="sm"
+                  onPress={() => setModalVisible(false)}
+                />
+                <Button
+                  label="确认"
+                  variant="filled"
+                  size="sm"
+                  onPress={() => setModalVisible(false)}
+                />
+              </Modal.Footer>
+            </Modal>
           </Section>
 
           <Divider />

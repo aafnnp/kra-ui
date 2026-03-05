@@ -73,6 +73,7 @@ export default defineConfig({
         items: [
           { text: "Spinner", link: "/guide/components/spinner" },
           { text: "Alert", link: "/guide/components/alert" },
+          { text: "Modal", link: "/guide/components/modal" },
         ],
       },
     ],

@@ -108,3 +108,6 @@ export type {SpinnerProps} from './components/Spinner';
 
 export {default as Alert} from './components/Alert';
 export type {AlertProps} from './components/Alert';
+
+export {default as Modal, ModalHeader, ModalBody, ModalFooter} from './components/Modal';
+export type {ModalProps, ModalHeaderProps, ModalBodyProps, ModalFooterProps} from './components/Modal';
