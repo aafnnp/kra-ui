@@ -34,5 +34,5 @@ jobs:
           title: "chore: version packages"
           commit: "chore: version packages"
         env:
-          GITHUB_TOKEN: ${{ secrets.PUBLISH_PACKAGE_TOKEN }}
+          # GITHUB_TOKEN: ${{ secrets.PUBLISH_PACKAGE_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_PACKAGE_TOKEN }}
