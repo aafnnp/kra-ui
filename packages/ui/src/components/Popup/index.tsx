@@ -101,6 +101,15 @@ function Popup({
     animateOut(() => onClose());
   }, [animateOut, onClose]);
 
+  const swipeToCloseRef = useRef(swipeToClose);
+  const handleCloseRef = useRef(handleClose);
+  useEffect(() => {
+    swipeToCloseRef.current = swipeToClose;
+  }, [swipeToClose]);
+  useEffect(() => {
+    handleCloseRef.current = handleClose;
+  }, [handleClose]);
+
   useEffect(() => {
     if (visible) {
       slideAnim.setValue(SCREEN_HEIGHT);
@@ -112,9 +121,9 @@ function Popup({
 
   const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: () => swipeToClose,
+      onStartShouldSetPanResponder: () => swipeToCloseRef.current,
       onMoveShouldSetPanResponder: (_, gestureState) =>
-        swipeToClose && gestureState.dy > 5,
+        swipeToCloseRef.current && gestureState.dy > 5,
       onPanResponderMove: (_, gestureState) => {
         if (gestureState.dy > 0) {
           dragY.setValue(gestureState.dy);
@@ -122,7 +131,7 @@ function Popup({
       },
       onPanResponderRelease: (_, gestureState) => {
         if (gestureState.dy > SWIPE_THRESHOLD) {
-          handleClose();
+          handleCloseRef.current();
         } else {
           Animated.spring(dragY, {
             toValue: 0,

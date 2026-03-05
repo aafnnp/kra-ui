@@ -4,7 +4,7 @@ import {
   Animated,
   StyleSheet,
   Modal as RNModal,
-  Dimensions,
+  useWindowDimensions,
   type LayoutChangeEvent,
 } from 'react-native';
 import {useTheme} from '@shopify/restyle';
@@ -39,8 +39,6 @@ export interface DropdownProps extends BoxProps {
   align?: 'left' | 'right';
 }
 
-const SCREEN_HEIGHT = Dimensions.get('window').height;
-
 /**
  * 下拉菜单组件
  * 支持缩放淡入动画、自定义触发器、对齐方式
@@ -55,6 +53,7 @@ function Dropdown({
   ...rest
 }: DropdownProps) {
   const theme = useTheme<Theme>();
+  const {height: screenHeight} = useWindowDimensions();
   const [isOpen, setIsOpen] = useState(false);
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
@@ -124,6 +123,7 @@ function Dropdown({
   }, [isOpen, animateIn]);
 
   const triggerViewRef = useRef<any>(null);
+  const [menuHeight, setMenuHeight] = useState(0);
 
   const handleTriggerLayout = useCallback(() => {
     if (triggerViewRef.current) {
@@ -135,15 +135,22 @@ function Dropdown({
     }
   }, []);
 
-  const menuTop = triggerRef.current.y + triggerRef.current.height + 4;
+  const handleMenuLayout = useCallback((e: LayoutChangeEvent) => {
+    setMenuHeight(e.nativeEvent.layout.height);
+  }, []);
+
+  const {y, height: triggerHeight, x, width: triggerWidth} = triggerRef.current;
+  const menuTopWhenDown = y + triggerHeight + 4;
   const menuLeft =
     align === 'right'
-      ? triggerRef.current.x +
-        triggerRef.current.width -
-        (menuWidth || triggerRef.current.width)
-      : triggerRef.current.x;
+      ? x + triggerWidth - (menuWidth || triggerWidth)
+      : x;
 
-  const openDownward = menuTop + 200 < SCREEN_HEIGHT;
+  const estimatedMenuHeight = menuHeight || 200;
+  const openDownward = menuTopWhenDown + estimatedMenuHeight < screenHeight;
+  const menuTop = openDownward
+    ? menuTopWhenDown
+    : Math.max(0, y - estimatedMenuHeight - 4);
 
   return (
     <Box {...rest}>
@@ -188,15 +195,13 @@ function Dropdown({
         <Pressable style={StyleSheet.absoluteFill} onPress={handleClose} />
 
         <Animated.View
+          onLayout={handleMenuLayout}
           style={[
             styles.menu,
             {
-              top: openDownward ? menuTop : undefined,
-              bottom: openDownward
-                ? undefined
-                : SCREEN_HEIGHT - triggerRef.current.y + 4,
+              top: menuTop,
               left: menuLeft,
-              width: menuWidth || triggerRef.current.width,
+              width: menuWidth || triggerWidth,
               backgroundColor: theme.colors.cardBackground,
               borderColor: theme.colors.border,
               shadowColor: theme.colors.textPrimary as string,
