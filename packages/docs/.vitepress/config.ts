@@ -62,6 +62,7 @@ export default defineConfig({
       {
         text: "数据展示",
         items: [
+          { text: "Accordion", link: "/guide/components/accordion" },
           { text: "Badge", link: "/guide/components/badge" },
           { text: "Card", link: "/guide/components/card" },
           { text: "Avatar", link: "/guide/components/avatar" },

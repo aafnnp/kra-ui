@@ -35,6 +35,7 @@ import {
   Rating,
   SegmentedControl,
   Textarea,
+  Accordion,
 } from "kra-ui"
 
 /** 各组件分区展示 */
@@ -602,6 +603,44 @@ export default function HomeScreen() {
                 title="错误"
                 description="操作失败，请重试"
               />
+            </VStack>
+          </Section>
+
+          <Divider />
+
+          {/* 手风琴 */}
+          <Section title="手风琴 Accordion">
+            <VStack space="s">
+              <Text variant="label" marginBottom="xs">
+                单项展开（默认）
+              </Text>
+              <Accordion defaultIndex={[0]}>
+                <Accordion.Item title="什么是 NativeUI？">
+                  <Text variant="body">
+                    NativeUI 是基于 @shopify/restyle 的 React Native 组件库，提供丰富的主题化组件。
+                  </Text>
+                </Accordion.Item>
+                <Accordion.Item title="如何安装？">
+                  <Text variant="body">
+                    运行 npm install kra-ui @shopify/restyle 即可安装。
+                  </Text>
+                </Accordion.Item>
+                <Accordion.Item title="禁用项" disabled>
+                  <Text variant="body">该项已禁用，无法展开。</Text>
+                </Accordion.Item>
+              </Accordion>
+
+              <Text variant="label" marginTop="s" marginBottom="xs">
+                多项展开 + 分离样式
+              </Text>
+              <Accordion type="multiple" variant="separated" defaultIndex={[0]}>
+                <Accordion.Item title="React Native">
+                  <Text variant="body">使用 React 构建原生移动应用的框架。</Text>
+                </Accordion.Item>
+                <Accordion.Item title="Expo">
+                  <Text variant="body">简化 React Native 开发流程的工具链。</Text>
+                </Accordion.Item>
+              </Accordion>
             </VStack>
           </Section>
 
