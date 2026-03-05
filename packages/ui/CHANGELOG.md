@@ -1,5 +1,11 @@
 # kra-ui
 
+## 0.3.1
+
+### Patch Changes
+
+- 15b6413: fix issue
+
 ## 0.3.0
 
 ### Minor Changes
