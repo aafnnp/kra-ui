@@ -1,5 +1,11 @@
 # kra-ui
 
+## 0.4.0
+
+### Minor Changes
+
+- 4c3b983: react-native-reanimated 替换 Animated
+
 ## 0.3.1
 
 ### Patch Changes
