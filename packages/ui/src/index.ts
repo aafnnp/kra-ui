@@ -90,6 +90,9 @@ export {default as Textarea} from './components/Textarea';
 export type {TextareaProps} from './components/Textarea';
 
 // 数据展示组件
+export {default as Accordion, AccordionItem} from './components/Accordion';
+export type {AccordionProps, AccordionItemProps} from './components/Accordion';
+
 export {default as Badge} from './components/Badge';
 export type {BadgeProps} from './components/Badge';
 
