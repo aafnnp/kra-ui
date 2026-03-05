@@ -1,5 +1,12 @@
 import React, {useEffect, useRef, useCallback} from 'react';
-import {Animated, StyleSheet, Dimensions, Pressable} from 'react-native';
+import {StyleSheet, Pressable, useWindowDimensions} from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  runOnJS,
+} from 'react-native-reanimated';
 import {useTheme} from '@shopify/restyle';
 import type {Theme} from '../../theme';
 import Text from '../Text';
@@ -41,7 +48,6 @@ export interface ToastProps {
   closable?: boolean;
 }
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
 const TOAST_OFFSET = 60;
 
 /**
@@ -59,40 +65,32 @@ function Toast({
   closable = true,
 }: ToastProps) {
   const theme = useTheme<Theme>();
-  const translateY = useRef(new Animated.Value(placement === 'top' ? -100 : 100)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
+  const {width: screenWidth} = useWindowDimensions();
+  const translateY = useSharedValue(placement === 'top' ? -100 : 100);
+  const opacity = useSharedValue(0);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: translateY.value}],
+    opacity: opacity.value,
+  }));
+
   const animateIn = useCallback(() => {
-    Animated.parallel([
-      Animated.spring(translateY, {
-        toValue: 0,
-        useNativeDriver: true,
-        tension: 80,
-        friction: 12,
-      }),
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    translateY.value = withSpring(0, {stiffness: 80, damping: 12});
+    opacity.value = withTiming(1, {duration: 200});
   }, [translateY, opacity]);
 
   const animateOut = useCallback(
     (callback?: () => void) => {
-      Animated.parallel([
-        Animated.timing(translateY, {
-          toValue: placement === 'top' ? -100 : 100,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start(callback);
+      translateY.value = withTiming(
+        placement === 'top' ? -100 : 100,
+        {duration: 200},
+      );
+      opacity.value = withTiming(0, {duration: 200}, finished => {
+        if (finished && callback) {
+          runOnJS(callback)();
+        }
+      });
     },
     [translateY, opacity, placement],
   );
@@ -106,8 +104,8 @@ function Toast({
 
   useEffect(() => {
     if (visible) {
-      translateY.setValue(placement === 'top' ? -100 : 100);
-      opacity.setValue(0);
+      translateY.value = placement === 'top' ? -100 : 100;
+      opacity.value = 0;
       animateIn();
 
       if (duration > 0) {
@@ -134,10 +132,7 @@ function Toast({
       style={[
         styles.container,
         placement === 'top' ? {top: TOAST_OFFSET} : {bottom: TOAST_OFFSET},
-        {
-          transform: [{translateY}],
-          opacity,
-        },
+        animatedStyle,
       ]}
       pointerEvents="box-none">
       <Pressable
@@ -145,6 +140,7 @@ function Toast({
         style={[
           styles.toast,
           {
+            width: screenWidth - 32,
             backgroundColor: theme.colors.cardBackground,
             borderLeftColor: theme.colors[colorKey] as string,
             shadowColor: theme.colors.textPrimary as string,
@@ -183,7 +179,6 @@ const styles = StyleSheet.create({
   toast: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: SCREEN_WIDTH - 32,
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 12,

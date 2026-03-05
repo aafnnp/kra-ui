@@ -40,8 +40,8 @@ export interface ButtonProps extends BoxProps {
   size?: 'sm' | 'md' | 'lg';
   /** 加载状态 */
   loading?: boolean;
-  /** 禁用状态 */
-  disabled?: boolean;
+  /** 是否禁用 */
+  isDisabled?: boolean;
   /** 点击事件 */
   onPress?: PressableProps['onPress'];
 }
@@ -56,7 +56,7 @@ function Button({
   variant = 'filled',
   size = 'md',
   loading = false,
-  disabled = false,
+  isDisabled = false,
   onPress,
   ...rest
 }: ButtonProps) {
@@ -74,15 +74,15 @@ function Button({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    opacity: disabled ? 0.5 : 1,
+    opacity: isDisabled ? 0.5 : 1,
   };
 
   return (
     <Pressable
       onPress={onPress}
-      disabled={disabled || loading}
+      disabled={isDisabled || loading}
       accessibilityRole="button"
-      accessibilityState={{disabled: disabled || loading}}>
+      accessibilityState={{disabled: isDisabled || loading}}>
       <ButtonContainer variant={variant} style={pressableStyle} {...rest}>
         {loading && (
           <ActivityIndicator

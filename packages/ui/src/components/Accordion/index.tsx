@@ -121,7 +121,7 @@ export interface AccordionItemProps extends BoxProps {
   /** 标题 */
   title: string;
   /** 是否禁用 */
-  disabled?: boolean;
+  isDisabled?: boolean;
 }
 
 /**
@@ -130,7 +130,7 @@ export interface AccordionItemProps extends BoxProps {
  */
 function AccordionItem({
   title,
-  disabled = false,
+  isDisabled = false,
   children,
   ...rest
 }: AccordionItemProps) {
@@ -140,10 +140,10 @@ function AccordionItem({
   const isExpanded = expandedIndices.has(index);
 
   const handlePress = useCallback(() => {
-    if (!disabled) {
+    if (!isDisabled) {
       toggle(index);
     }
-  }, [disabled, toggle, index]);
+  }, [isDisabled, toggle, index]);
 
   const itemStyle: BoxProps =
     variant === 'separated'
@@ -157,16 +157,16 @@ function AccordionItem({
     <Box {...itemStyle} {...rest}>
       <Pressable
         onPress={handlePress}
-        disabled={disabled}
+        disabled={isDisabled}
         accessibilityRole="button"
-        accessibilityState={{expanded: isExpanded, disabled}}>
+        accessibilityState={{expanded: isExpanded, disabled: isDisabled}}>
         <Box
           flexDirection="row"
           alignItems="center"
           justifyContent="space-between"
           padding="m"
           style={{backgroundColor: headerBg}}
-          opacity={disabled ? 0.5 : 1}>
+          opacity={isDisabled ? 0.5 : 1}>
           <Text fontWeight="600" flex={1}>
             {title}
           </Text>

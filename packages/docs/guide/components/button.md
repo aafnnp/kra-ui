@@ -25,5 +25,5 @@ import { Button } from 'kra-ui';
 | variant  | `'filled' \| 'outline' \| 'ghost' \| 'danger'` | `'filled'` | 按钮变体         |
 | size     | `'sm' \| 'md' \| 'lg'`                         | `'md'`     | 按钮尺寸         |
 | loading  | `boolean`                                      | `false`    | 加载状态         |
-| disabled | `boolean`                                      | `false`    | 禁用状态         |
+| isDisabled | `boolean`                                      | `false`    | 是否禁用         |
 | onPress  | `() => void`                                   | -          | 点击回调         |

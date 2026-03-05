@@ -1,11 +1,17 @@
 import React, {useState, useRef, useCallback, useEffect} from 'react';
 import {
   Pressable,
-  Animated,
   StyleSheet,
   type LayoutChangeEvent,
   ScrollView,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  withSequence,
+} from 'react-native-reanimated';
 import {useTheme} from '@shopify/restyle';
 import type {Theme} from '../../theme';
 import Box from '../Box';
@@ -62,31 +68,28 @@ function Tabs({
 
   const [currentKey, setCurrentKey] = useState(activeKey || items[0]?.key || '');
   const tabLayouts = useRef<Record<string, {x: number; width: number}>>({});
-  const indicatorLeft = useRef(new Animated.Value(0)).current;
-  const indicatorWidth = useRef(new Animated.Value(0)).current;
-  const contentOpacity = useRef(new Animated.Value(1)).current;
+  const indicatorLeft = useSharedValue(0);
+  const indicatorWidth = useSharedValue(0);
+  const contentOpacity = useSharedValue(1);
 
   const effectiveKey = activeKey ?? currentKey;
+
+  const indicatorStyle = useAnimatedStyle(() => ({
+    left: indicatorLeft.value,
+    width: indicatorWidth.value,
+  }));
+
+  const contentStyle = useAnimatedStyle(() => ({
+    opacity: contentOpacity.value,
+  }));
 
   const animateIndicator = useCallback(
     (key: string) => {
       const layout = tabLayouts.current[key];
       if (!layout) return;
 
-      Animated.parallel([
-        Animated.spring(indicatorLeft, {
-          toValue: layout.x,
-          useNativeDriver: false,
-          tension: 80,
-          friction: 12,
-        }),
-        Animated.spring(indicatorWidth, {
-          toValue: layout.width,
-          useNativeDriver: false,
-          tension: 80,
-          friction: 12,
-        }),
-      ]).start();
+      indicatorLeft.value = withSpring(layout.x, {stiffness: 80, damping: 12});
+      indicatorWidth.value = withSpring(layout.width, {stiffness: 80, damping: 12});
     },
     [indicatorLeft, indicatorWidth],
   );
@@ -95,18 +98,10 @@ function Tabs({
     (key: string) => {
       if (key === effectiveKey) return;
 
-      Animated.sequence([
-        Animated.timing(contentOpacity, {
-          toValue: 0,
-          duration: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(contentOpacity, {
-          toValue: 1,
-          duration: 150,
-          useNativeDriver: true,
-        }),
-      ]).start();
+      contentOpacity.value = withSequence(
+        withTiming(0, {duration: 100}),
+        withTiming(1, {duration: 150}),
+      );
 
       if (!activeKey) {
         setCurrentKey(key);
@@ -213,18 +208,15 @@ function Tabs({
           <Animated.View
             style={[
               styles.indicator,
-              {
-                backgroundColor: theme.colors.primary,
-                left: indicatorLeft,
-                width: indicatorWidth,
-              },
+              {backgroundColor: theme.colors.primary},
+              indicatorStyle,
             ]}
           />
         )}
       </Box>
 
       {activeContent && (
-        <Animated.View style={{opacity: contentOpacity}}>
+        <Animated.View style={contentStyle}>
           <Box paddingTop="m">{activeContent}</Box>
         </Animated.View>
       )}

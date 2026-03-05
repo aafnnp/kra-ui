@@ -1,0 +1,35 @@
+---
+description: TypeScript 编码标准
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# TypeScript 规范
+
+## 类型安全
+
+```tsx
+// ❌ 禁止 any
+const ref = useRef<any>(null);
+
+// ✅ 使用具体类型
+const ref = useRef<View>(null);
+
+// ❌ 避免类型断言
+const color = theme.colors[key] as string;
+
+// ✅ 使用类型守卫或泛型约束
+const color = theme.colors[key]; // 让 Restyle 类型自动推导
+```
+
+## 导出规范
+
+- 组件：`export default ComponentName`
+- 类型：`export interface XxxProps`（不用 type alias 导出 props）
+- 在 `src/index.ts` 统一导出组件和类型
+
+## 命名
+
+- 组件/类型：PascalCase
+- 函数/变量：camelCase
+- 常量映射：camelCase（如 `sizeMap`、`statusColorMap`）

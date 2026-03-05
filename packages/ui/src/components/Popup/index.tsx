@@ -3,15 +3,20 @@ import {
   Modal as RNModal,
   Pressable,
   StyleSheet,
-  Animated,
-  Dimensions,
+  useWindowDimensions,
   PanResponder,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  runOnJS,
+} from 'react-native-reanimated';
 import {useTheme} from '@shopify/restyle';
 import type {Theme} from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
-import type {BoxProps} from '../Box';
 
 /** 弹出面板高度比例 */
 type PopupHeight = 'auto' | number;
@@ -39,7 +44,6 @@ export interface PopupProps {
   children?: React.ReactNode;
 }
 
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SWIPE_THRESHOLD = 80;
 
 /**
@@ -59,40 +63,35 @@ function Popup({
   children,
 }: PopupProps) {
   const theme = useTheme<Theme>();
-  const slideAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
-  const overlayAnim = useRef(new Animated.Value(0)).current;
-  const dragY = useRef(new Animated.Value(0)).current;
+  const {height: screenHeight} = useWindowDimensions();
+  const screenHeightRef = useRef(screenHeight);
+  screenHeightRef.current = screenHeight;
+
+  const slideAnim = useSharedValue(screenHeight);
+  const overlayAnim = useSharedValue(0);
+  const dragY = useSharedValue(0);
+
+  const overlayStyle = useAnimatedStyle(() => ({
+    opacity: overlayAnim.value,
+  }));
+
+  const containerStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: slideAnim.value + dragY.value}],
+  }));
 
   const animateIn = useCallback(() => {
-    Animated.parallel([
-      Animated.spring(slideAnim, {
-        toValue: 0,
-        useNativeDriver: true,
-        tension: 65,
-        friction: 11,
-      }),
-      Animated.timing(overlayAnim, {
-        toValue: 1,
-        duration: 250,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    slideAnim.value = withSpring(0, {stiffness: 65, damping: 11});
+    overlayAnim.value = withTiming(1, {duration: 250});
   }, [slideAnim, overlayAnim]);
 
   const animateOut = useCallback(
     (callback?: () => void) => {
-      Animated.parallel([
-        Animated.timing(slideAnim, {
-          toValue: SCREEN_HEIGHT,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-        Animated.timing(overlayAnim, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start(callback);
+      slideAnim.value = withTiming(screenHeightRef.current, {duration: 250});
+      overlayAnim.value = withTiming(0, {duration: 200}, finished => {
+        if (finished && callback) {
+          runOnJS(callback)();
+        }
+      });
     },
     [slideAnim, overlayAnim],
   );
@@ -112,9 +111,9 @@ function Popup({
 
   useEffect(() => {
     if (visible) {
-      slideAnim.setValue(SCREEN_HEIGHT);
-      overlayAnim.setValue(0);
-      dragY.setValue(0);
+      slideAnim.value = screenHeightRef.current;
+      overlayAnim.value = 0;
+      dragY.value = 0;
       animateIn();
     }
   }, [visible, animateIn, slideAnim, overlayAnim, dragY]);
@@ -126,19 +125,14 @@ function Popup({
         swipeToCloseRef.current && gestureState.dy > 5,
       onPanResponderMove: (_, gestureState) => {
         if (gestureState.dy > 0) {
-          dragY.setValue(gestureState.dy);
+          dragY.value = gestureState.dy;
         }
       },
       onPanResponderRelease: (_, gestureState) => {
         if (gestureState.dy > SWIPE_THRESHOLD) {
           handleCloseRef.current();
         } else {
-          Animated.spring(dragY, {
-            toValue: 0,
-            useNativeDriver: true,
-            tension: 65,
-            friction: 11,
-          }).start();
+          dragY.value = withSpring(0, {stiffness: 65, damping: 11});
         }
       },
     }),
@@ -146,7 +140,7 @@ function Popup({
 
   const panelHeight =
     typeof height === 'number'
-      ? SCREEN_HEIGHT * height
+      ? screenHeight * height
       : undefined;
 
   return (
@@ -156,7 +150,7 @@ function Popup({
       animationType="none"
       onRequestClose={handleClose}
       statusBarTranslucent>
-      <Animated.View style={[styles.overlay, {opacity: overlayAnim}]}>
+      <Animated.View style={[styles.overlay, overlayStyle]}>
         <Pressable
           style={StyleSheet.absoluteFill}
           onPress={closeOnOverlay ? handleClose : undefined}
@@ -164,19 +158,13 @@ function Popup({
       </Animated.View>
 
       <Animated.View
-        style={[
-          styles.container,
-          {
-            transform: [
-              {translateY: Animated.add(slideAnim, dragY)},
-            ],
-          },
-        ]}
+        style={[styles.container, containerStyle]}
         {...panResponder.panHandlers}>
         <Box
           style={[
             styles.panel,
             {
+              maxHeight: screenHeight * 0.9,
               backgroundColor: theme.colors.cardBackground,
               height: panelHeight,
               borderTopLeftRadius: rounded ? theme.borderRadii.xl : 0,
@@ -238,9 +226,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
-  panel: {
-    maxHeight: SCREEN_HEIGHT * 0.9,
-  },
+  panel: {},
   handle: {
     width: 36,
     height: 4,

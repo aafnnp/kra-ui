@@ -121,7 +121,7 @@ function ButtonDemo() {
       </HStack>
       <HStack space="s">
         <Button label="加载中..." variant="filled" loading onPress={() => {}} />
-        <Button label="禁用" variant="filled" disabled onPress={() => {}} />
+        <Button label="禁用" variant="filled" isDisabled onPress={() => {}} />
         <Button label="Danger" variant="danger" onPress={() => {}} />
       </HStack>
     </VStack>

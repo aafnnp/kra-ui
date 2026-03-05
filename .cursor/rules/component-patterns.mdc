@@ -1,0 +1,55 @@
+---
+description: UI 组件开发规范与模式
+globs: packages/ui/src/components/**/*.tsx
+alwaysApply: false
+---
+
+# 组件开发规范
+
+## 文件结构
+
+每个组件独立目录 `components/ComponentName/index.tsx`，包含：
+1. 类型定义（export interface XxxProps）
+2. 组件实现（function Xxx）
+3. 默认导出
+
+## Props 命名
+
+- 布尔状态：`isDisabled`、`isInvalid`、`isLoading`（不用 `disabled`、`invalid`）
+- 事件回调：`onPress`、`onChange`、`onClose`
+- 变体：`variant`，尺寸：`size`（统一 sm/md/lg）
+
+## Restyle 集成
+
+```tsx
+// ✅ 使用 createRestyleComponent + createVariant
+const Container = createRestyleComponent<ContainerProps, Theme>(
+  [createVariant({themeKey: 'xxxVariants'}), spacing, border, backgroundColor],
+  Box,
+);
+
+// ✅ 使用主题 token，不要硬编码颜色和间距
+<Box padding="m" backgroundColor="primary" />
+
+// ❌ 不要硬编码
+<Box style={{padding: 16, backgroundColor: '#007AFF'}} />
+```
+
+## 复合组件
+
+使用静态属性模式：
+
+```tsx
+function Modal({...}) { /* ... */ }
+Modal.Header = ModalHeader;
+Modal.Body = ModalBody;
+Modal.Footer = ModalFooter;
+export default Modal;
+```
+
+## 必须项
+
+- 添加中文 JSDoc 注释
+- 导出 Props 类型接口
+- 添加 accessibilityRole 和 accessibilityState
+- 使用 useCallback/useMemo 优化回调和计算

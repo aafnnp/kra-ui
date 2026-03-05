@@ -3,7 +3,7 @@ import {
   Modal as RNModal,
   Pressable,
   StyleSheet,
-  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import {useTheme} from '@shopify/restyle';
 import type {Theme} from '../../theme';
@@ -58,7 +58,7 @@ function Modal({
   children,
 }: ModalProps) {
   const theme = useTheme<Theme>();
-  const screenWidth = Dimensions.get('window').width;
+  const {width: screenWidth} = useWindowDimensions();
 
   const handleOverlayPress = useCallback(() => {
     if (closeOnOverlay) {

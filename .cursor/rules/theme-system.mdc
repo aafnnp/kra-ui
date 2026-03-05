@@ -1,0 +1,32 @@
+---
+description: 主题系统与设计令牌规范
+globs: packages/ui/src/theme/**/*.ts
+alwaysApply: false
+---
+
+# 主题系统规范
+
+## 设计令牌
+
+- 颜色：使用 `palette.ts` 中的语义化色阶（gray/primary/secondary/success/warning/error 50-900）
+- 间距：xs(4) / s(8) / m(16) / l(24) / xl(32) / xxl(48)
+- 圆角：none / xs / s / m / l / xl / full
+- 断点：phone(0) / tablet(768)
+
+## 新增变体
+
+在 `theme.ts` 的对应 key 下添加变体定义，同时在 `darkTheme.ts` 中同步：
+
+```ts
+// theme.ts
+buttonVariants: {
+  filled: { backgroundColor: 'primary', borderRadius: 'm' },
+  // 新增变体...
+}
+```
+
+## 颜色引用
+
+- 组件中通过 Restyle props 引用：`color="textPrimary"` / `backgroundColor="primary"`
+- 需要动态颜色时用 `useTheme<Theme>()`，避免 `as string` 类型断言
+- 新增颜色必须同时在 light/dark 主题中定义

@@ -1,12 +1,19 @@
 import React, {useState, useRef, useCallback, useEffect} from 'react';
 import {
   Pressable,
-  Animated,
   StyleSheet,
   Modal as RNModal,
   useWindowDimensions,
   type LayoutChangeEvent,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  interpolate,
+  runOnJS,
+} from 'react-native-reanimated';
 import {useTheme} from '@shopify/restyle';
 import type {Theme} from '../../theme';
 import Box from '../Box';
@@ -55,8 +62,8 @@ function Dropdown({
   const theme = useTheme<Theme>();
   const {height: screenHeight} = useWindowDimensions();
   const [isOpen, setIsOpen] = useState(false);
-  const scaleAnim = useRef(new Animated.Value(0)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useSharedValue(0);
+  const opacityAnim = useSharedValue(0);
   const triggerRef = useRef<{x: number; y: number; width: number; height: number}>({
     x: 0,
     y: 0,
@@ -64,43 +71,33 @@ function Dropdown({
     height: 0,
   });
 
+  const menuAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: opacityAnim.value,
+    transform: [
+      {scale: interpolate(scaleAnim.value, [0, 1], [0.85, 1])},
+    ],
+  }));
+
   const animateIn = useCallback(() => {
-    Animated.parallel([
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        useNativeDriver: true,
-        tension: 100,
-        friction: 12,
-      }),
-      Animated.timing(opacityAnim, {
-        toValue: 1,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    scaleAnim.value = withSpring(1, {stiffness: 100, damping: 12});
+    opacityAnim.value = withTiming(1, {duration: 150});
   }, [scaleAnim, opacityAnim]);
 
   const animateOut = useCallback(
     (callback?: () => void) => {
-      Animated.parallel([
-        Animated.timing(scaleAnim, {
-          toValue: 0,
-          duration: 150,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacityAnim, {
-          toValue: 0,
-          duration: 150,
-          useNativeDriver: true,
-        }),
-      ]).start(callback);
+      scaleAnim.value = withTiming(0, {duration: 150});
+      opacityAnim.value = withTiming(0, {duration: 150}, finished => {
+        if (finished && callback) {
+          runOnJS(callback)();
+        }
+      });
     },
     [scaleAnim, opacityAnim],
   );
 
   const handleOpen = useCallback(() => {
-    scaleAnim.setValue(0);
-    opacityAnim.setValue(0);
+    scaleAnim.value = 0;
+    opacityAnim.value = 0;
     setIsOpen(true);
   }, [scaleAnim, opacityAnim]);
 
@@ -205,16 +202,8 @@ function Dropdown({
               backgroundColor: theme.colors.cardBackground,
               borderColor: theme.colors.border,
               shadowColor: theme.colors.textPrimary as string,
-              opacity: opacityAnim,
-              transform: [
-                {
-                  scale: scaleAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0.85, 1],
-                  }),
-                },
-              ],
             },
+            menuAnimatedStyle,
           ]}>
           {items.map(item => (
             <React.Fragment key={item.key}>

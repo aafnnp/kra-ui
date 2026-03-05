@@ -1,0 +1,39 @@
+---
+description: React Native 性能最佳实践
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# RN 性能规范
+
+## 动画
+
+- 动画始终设置 `useNativeDriver: true`
+- 优先动画 `transform` 和 `opacity`（GPU 加速属性）
+- 长期目标迁移到 `react-native-reanimated`
+
+## 避免内联对象
+
+```tsx
+// ❌ 每次渲染创建新对象
+<View style={{flex: 1, padding: 16}} />
+
+// ✅ 使用 StyleSheet.create 或 Restyle props
+<Box flex={1} padding="m" />
+```
+
+## 尺寸获取
+
+```tsx
+// ❌ 模块顶层，旋转不更新
+const WIDTH = Dimensions.get('window').width;
+
+// ✅ 使用 hook，响应式更新
+const {width} = useWindowDimensions();
+```
+
+## 列表
+
+- 大列表使用 FlashList 代替 FlatList
+- 列表项使用 React.memo
+- 回调使用 useCallback 稳定引用

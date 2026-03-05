@@ -1,0 +1,26 @@
+---
+description: 文档与示例应用开发规范
+globs: "packages/{docs,example}/**/*"
+alwaysApply: false
+---
+
+# 文档与示例规范
+
+## 文档（VitePress）
+
+- 路径：`packages/docs/guide/components/`
+- 每个组件一个 md 文件，包含：用法示例、Props 表格、注意事项
+- 文档语言：中文
+
+## 示例应用（Expo）
+
+- 路径：`packages/example/app/demo/`
+- 使用 expo-router 的动态路由 `[name].tsx`
+- 示例应覆盖组件的所有变体和交互状态
+
+## 新增组件检查清单
+
+1. `packages/ui/src/components/Xxx/index.tsx` - 组件实现
+2. `packages/ui/src/index.ts` - 添加导出
+3. `packages/docs/guide/components/xxx.md` - 文档
+4. `packages/example/` - 示例页面

@@ -1,0 +1,22 @@
+---
+description: Kra-UI 项目概述与核心约定，所有对话都应遵循
+alwaysApply: true
+---
+
+# Kra-UI 项目约定
+
+## 项目结构
+
+- `packages/ui` - 核心组件库（kra-ui），基于 @shopify/restyle
+- `packages/example` - Expo 示例应用
+- `packages/docs` - VitePress 文档站
+- 包管理器：pnpm，monorepo 架构
+
+## 核心约定
+
+- 所有代码注释使用中文
+- 组件使用函数式组件 + TypeScript
+- 主题系统基于 @shopify/restyle，类型定义在 `packages/ui/src/theme/`
+- 组件导出统一在 `packages/ui/src/index.ts`，每个组件导出默认导出 + Props 类型
+- 不要过度设计，保证代码简洁、实用、可复用
+- 改动时最小化修改范围，尽量不影响其他模块

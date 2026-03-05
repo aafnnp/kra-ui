@@ -68,7 +68,7 @@ import { Accordion } from 'kra-ui';
   <Accordion.Item title="可用项">
     <Text>可以展开的内容</Text>
   </Accordion.Item>
-  <Accordion.Item title="禁用项" disabled>
+  <Accordion.Item title="禁用项" isDisabled>
     <Text>无法展开的内容</Text>
   </Accordion.Item>
 </Accordion>
@@ -88,5 +88,5 @@ import { Accordion } from 'kra-ui';
 | 属性        | 类型       | 默认值  | 说明              |
 | ----------- | ---------- | ------- | ----------------- |
 | title       | `string`   | -       | 标题（必填）      |
-| disabled    | `boolean`  | `false` | 是否禁用          |
+| isDisabled  | `boolean`  | `false` | 是否禁用          |
 | ...BoxProps | -          | -       | 继承所有 Box 属性 |
