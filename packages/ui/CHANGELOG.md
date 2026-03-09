@@ -1,5 +1,11 @@
 # kra-ui
 
+## 0.5.0
+
+### Minor Changes
+
+- [#10](https://github.com/aafnnp/kra-ui/pull/10) [`4992a55`](https://github.com/aafnnp/kra-ui/commit/4992a553b14eb285e0dcf643b649a5b496f37558) Thanks [@aafnnp](https://github.com/aafnnp)! - 新增 Pagecontainer
+
 ## 0.4.0
 
 ### Minor Changes
