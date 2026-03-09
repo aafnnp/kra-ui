@@ -72,6 +72,7 @@ export default defineConfig({
         text: "数据导航",
         items: [
           { text: "Tabs", link: "/guide/components/tabs" },
+          { text: "Steps", link: "/guide/components/steps" },
           { text: "Dropdown", link: "/guide/components/dropdown" },
           { text: "PageContainer", link: "/guide/components/page-container" },
         ],

@@ -76,6 +76,7 @@ const COMPONENT_GROUPS: CategoryGroup[] = [
     category: "导航",
     items: [
       { name: "tabs", title: "选项卡 Tabs" },
+      { name: "steps", title: "步骤条 Steps" },
       { name: "dropdown", title: "下拉菜单 Dropdown" },
       { name: "page-container", title: "页面容器 PageContainer" },
     ],

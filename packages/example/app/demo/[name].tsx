@@ -41,6 +41,7 @@ import {
   SegmentedControl,
   Textarea,
   Accordion,
+  Steps,
   PageContainer,
 } from "kra-ui"
 
@@ -1016,6 +1017,81 @@ function PageContainerDemo() {
   )
 }
 
+function StepsDemo() {
+  const [current, setCurrent] = useState(1)
+  const [verticalCurrent, setVerticalCurrent] = useState(1)
+
+  return (
+    <VStack space="l">
+      <Heading size="h4">基本用法</Heading>
+      <Steps
+        current={current}
+        items={[
+          { title: "账号信息" },
+          { title: "身份验证" },
+          { title: "完成注册" },
+        ]}
+      />
+      <HStack space="s">
+        <Button label="上一步" variant="outline" size="sm" onPress={() => setCurrent((p) => Math.max(0, p - 1))} />
+        <Button label="下一步" size="sm" onPress={() => setCurrent((p) => Math.min(2, p + 1))} />
+      </HStack>
+
+      <Heading size="h4">带描述</Heading>
+      <Steps
+        current={1}
+        items={[
+          { title: "账号信息", description: "填写用户名和邮箱" },
+          { title: "身份验证", description: "验证手机号码" },
+          { title: "完成注册", description: "设置密码并提交" },
+        ]}
+      />
+
+      <Heading size="h4">错误状态</Heading>
+      <Steps
+        current={1}
+        items={[
+          { title: "提交订单" },
+          { title: "支付", status: "error" },
+          { title: "完成" },
+        ]}
+      />
+
+      <Heading size="h4">可点击</Heading>
+      <Steps
+        current={current}
+        onChange={setCurrent}
+        items={[
+          { title: "第一步" },
+          { title: "第二步" },
+          { title: "第三步" },
+        ]}
+      />
+
+      <Heading size="h4">垂直方向</Heading>
+      <Steps
+        current={verticalCurrent}
+        orientation="vertical"
+        onChange={setVerticalCurrent}
+        items={[
+          { title: "创建账户", description: "填写基本信息完成注册" },
+          { title: "实名认证", description: "上传身份证照片进行验证" },
+          { title: "绑定银行卡", description: "添加银行卡用于收款" },
+          { title: "开始使用" },
+        ]}
+      />
+
+      <Heading size="h4">不同尺寸</Heading>
+      <Text variant="caption" color="textSecondary">Small</Text>
+      <Steps current={1} size="sm" items={[{ title: "步骤一" }, { title: "步骤二" }, { title: "步骤三" }]} />
+      <Text variant="caption" color="textSecondary">Medium（默认）</Text>
+      <Steps current={1} size="md" items={[{ title: "步骤一" }, { title: "步骤二" }, { title: "步骤三" }]} />
+      <Text variant="caption" color="textSecondary">Large</Text>
+      <Steps current={1} size="lg" items={[{ title: "步骤一" }, { title: "步骤二" }, { title: "步骤三" }]} />
+    </VStack>
+  )
+}
+
 // ─── 演示注册表 ───────────────────────────────────
 
 /** 名称 -> 标题映射 */
@@ -1052,6 +1128,7 @@ const TITLE_MAP: Record<string, string> = {
   grid: "网格 Grid",
   group: "分组 Group",
   separator: "分隔符 Separator",
+  steps: "步骤条 Steps",
   "page-container": "页面容器 PageContainer",
 }
 
@@ -1089,6 +1166,7 @@ const DEMO_MAP: Record<string, React.ComponentType> = {
   grid: GridDemo,
   group: GroupDemo,
   separator: SeparatorDemo,
+  steps: StepsDemo,
   "page-container": PageContainerDemo,
 }
 
