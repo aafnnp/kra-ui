@@ -123,3 +123,7 @@ export type {TabsProps, TabItem} from './components/Tabs';
 
 export {default as Dropdown} from './components/Dropdown';
 export type {DropdownProps, DropdownItem} from './components/Dropdown';
+
+// 页面容器
+export {default as PageContainer} from './components/PageContainer';
+export type {PageContainerProps} from './components/PageContainer';
