@@ -73,6 +73,7 @@ export default defineConfig({
         items: [
           { text: "Tabs", link: "/guide/components/tabs" },
           { text: "Dropdown", link: "/guide/components/dropdown" },
+          { text: "PageContainer", link: "/guide/components/page-container" },
         ],
       },
       {
