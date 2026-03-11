@@ -10,6 +10,7 @@
     "clean": "pnpm -r clean",
     "changeset": "changeset",
     "version-packages": "changeset version",
+    "publish-packages": "pnpm build && changeset publish",
     "release": "pnpm lint && pnpm build && changeset publish"
   },
   "devDependencies": {
