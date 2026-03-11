@@ -5,6 +5,7 @@ import type {Theme} from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
 import type {BoxProps} from '../Box';
+import {CheckIcon} from '../Icon/icons';
 
 /** 步骤状态 */
 type StepStatus = 'wait' | 'process' | 'finish' | 'error';
@@ -108,8 +109,6 @@ function StepIndicator({
     }
   }, [status, theme]);
 
-  const defaultContent = status === 'finish' ? '✓' : String(index + 1);
-
   return (
     <Box
       width={config.circle}
@@ -121,9 +120,13 @@ function StepIndicator({
       style={{backgroundColor: bgColor, borderColor}}
     >
       {icon ?? (
-        <Text style={{fontSize: config.fontSize, color: contentColor, fontWeight: '600'}}>
-          {defaultContent}
-        </Text>
+        status === 'finish' ? (
+          <CheckIcon size={config.fontSize} color="textInverse" />
+        ) : (
+          <Text style={{fontSize: config.fontSize, color: contentColor, fontWeight: '600'}}>
+            {String(index + 1)}
+          </Text>
+        )
       )}
     </Box>
   );

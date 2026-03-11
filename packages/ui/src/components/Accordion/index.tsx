@@ -12,6 +12,7 @@ import type { Theme } from "../../theme"
 import Box from "../Box"
 import Text from "../Text"
 import type { BoxProps } from "../Box"
+import { ChevronDownIcon } from "../Icon/icons"
 
 /** 动画时长（毫秒） */
 const ANIMATION_DURATION = 250
@@ -176,9 +177,9 @@ function AccordionItem({ title, isDisabled = false, children, ...rest }: Accordi
           >
             {title}
           </Text>
-          <Animated.Text style={[{ fontSize: 12, color: theme.colors.textSecondary }, arrowAnimatedStyle]}>
-            ▼
-          </Animated.Text>
+          <Animated.View style={arrowAnimatedStyle}>
+            <ChevronDownIcon size={12} color="textSecondary" />
+          </Animated.View>
         </Box>
       </Pressable>
 

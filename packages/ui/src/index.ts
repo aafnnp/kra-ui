@@ -36,6 +36,45 @@ export type {ScrollAreaProps} from './components/ScrollArea';
 export {default as Separator} from './components/Separator';
 export type {SeparatorProps} from './components/Separator';
 
+// 图标
+export {default as Icon, createIcon} from './components/Icon';
+export type {IconProps, CreateIconOptions} from './components/Icon';
+export {
+  ChevronUpIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  CloseIcon,
+  CheckIcon,
+  PlusIcon,
+  MinusIcon,
+  SearchIcon,
+  EditIcon,
+  TrashIcon,
+  CopyIcon,
+  InfoIcon,
+  CheckCircleIcon,
+  AlertTriangleIcon,
+  XCircleIcon,
+  MenuIcon,
+  MoreHorizontalIcon,
+  MoreVerticalIcon,
+  EyeIcon,
+  EyeOffIcon,
+  HeartIcon,
+  StarIcon,
+  SettingsIcon,
+  HomeIcon,
+  UserIcon,
+  RefreshIcon,
+  DownloadIcon,
+  ExternalLinkIcon,
+} from './components/Icon/icons';
+
 // 排版组件
 export {default as Text} from './components/Text';
 export type {TextProps} from './components/Text';

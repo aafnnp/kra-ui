@@ -10,6 +10,9 @@ import Animated, {
 import {useTheme} from '@shopify/restyle';
 import type {Theme} from '../../theme';
 import Text from '../Text';
+import {InfoIcon, CheckCircleIcon, AlertTriangleIcon, XCircleIcon} from '../Icon/icons';
+import {CloseIcon} from '../Icon/icons';
+import type {IconProps} from '../Icon';
 
 /** Toast 状态类型 */
 type ToastStatus = 'info' | 'success' | 'warning' | 'error';
@@ -17,11 +20,11 @@ type ToastStatus = 'info' | 'success' | 'warning' | 'error';
 /** Toast 位置 */
 type ToastPlacement = 'top' | 'bottom';
 
-const statusIconMap: Record<ToastStatus, string> = {
-  info: 'ℹ',
-  success: '✓',
-  warning: '⚠',
-  error: '✕',
+const statusIconMap: Record<ToastStatus, React.FC<IconProps>> = {
+  info: InfoIcon,
+  success: CheckCircleIcon,
+  warning: AlertTriangleIcon,
+  error: XCircleIcon,
 };
 
 const statusColorMap: Record<ToastStatus, keyof Theme['colors']> = {
@@ -125,7 +128,7 @@ function Toast({
   }
 
   const colorKey = statusColorMap[status];
-  const icon = statusIconMap[status];
+  const StatusIcon = statusIconMap[status];
 
   return (
     <Animated.View
@@ -146,21 +149,13 @@ function Toast({
             shadowColor: theme.colors.textPrimary as string,
           },
         ]}>
-        <Text
-          style={[
-            styles.icon,
-            {color: theme.colors[colorKey] as string},
-          ]}>
-          {icon}
-        </Text>
+        <StatusIcon size={18} color={colorKey} />
         <Text style={styles.message} numberOfLines={2} color="textPrimary">
           {message}
         </Text>
         {closable && (
           <Pressable onPress={handleClose} hitSlop={8}>
-            <Text fontSize={14} color="textSecondary">
-              ✕
-            </Text>
+            <CloseIcon size={14} color="textSecondary" />
           </Pressable>
         )}
       </Pressable>
@@ -188,12 +183,8 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 6,
   },
-  icon: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginRight: 10,
-  },
   message: {
+    marginLeft: 10,
     flex: 1,
     fontSize: 15,
   },

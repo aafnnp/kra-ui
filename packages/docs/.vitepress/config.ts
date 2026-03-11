@@ -66,6 +66,7 @@ export default defineConfig({
           { text: "Badge", link: "/guide/components/badge" },
           { text: "Card", link: "/guide/components/card" },
           { text: "Avatar", link: "/guide/components/avatar" },
+          { text: "Icon", link: "/guide/components/icon" },
         ],
       },
       {
