@@ -43,6 +43,41 @@ import {
   Accordion,
   Steps,
   PageContainer,
+  Icon,
+  createIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  CloseIcon,
+  CheckIcon,
+  PlusIcon,
+  MinusIcon,
+  SearchIcon,
+  EditIcon,
+  TrashIcon,
+  CopyIcon,
+  InfoIcon,
+  CheckCircleIcon,
+  AlertTriangleIcon,
+  XCircleIcon,
+  MenuIcon,
+  MoreHorizontalIcon,
+  MoreVerticalIcon,
+  EyeIcon,
+  EyeOffIcon,
+  HeartIcon,
+  StarIcon,
+  SettingsIcon,
+  HomeIcon,
+  UserIcon,
+  RefreshIcon,
+  DownloadIcon,
+  ExternalLinkIcon,
 } from "kra-ui"
 
 // ─── 各组件演示 ───────────────────────────────────
@@ -1092,6 +1127,90 @@ function StepsDemo() {
   )
 }
 
+function IconDemo() {
+  const CustomIcon = createIcon({
+    displayName: "CustomIcon",
+    d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5",
+  })
+
+  return (
+    <VStack space="m">
+      <Heading size="h4">导航类</Heading>
+      <HStack space="m" flexWrap="wrap">
+        <ChevronUpIcon size="lg" color="textPrimary" />
+        <ChevronDownIcon size="lg" color="textPrimary" />
+        <ChevronLeftIcon size="lg" color="textPrimary" />
+        <ChevronRightIcon size="lg" color="textPrimary" />
+        <ArrowUpIcon size="lg" color="textPrimary" />
+        <ArrowDownIcon size="lg" color="textPrimary" />
+        <ArrowLeftIcon size="lg" color="textPrimary" />
+        <ArrowRightIcon size="lg" color="textPrimary" />
+      </HStack>
+
+      <Heading size="h4">操作类</Heading>
+      <HStack space="m" flexWrap="wrap">
+        <CloseIcon size="lg" color="textPrimary" />
+        <CheckIcon size="lg" color="textPrimary" />
+        <PlusIcon size="lg" color="textPrimary" />
+        <MinusIcon size="lg" color="textPrimary" />
+        <SearchIcon size="lg" color="textPrimary" />
+        <EditIcon size="lg" color="textPrimary" />
+        <TrashIcon size="lg" color="textPrimary" />
+        <CopyIcon size="lg" color="textPrimary" />
+      </HStack>
+
+      <Heading size="h4">状态类</Heading>
+      <HStack space="m" flexWrap="wrap">
+        <InfoIcon size="lg" color="primary" />
+        <CheckCircleIcon size="lg" color="success" />
+        <AlertTriangleIcon size="lg" color="warning" />
+        <XCircleIcon size="lg" color="error" />
+      </HStack>
+
+      <Heading size="h4">UI 类</Heading>
+      <HStack space="m" flexWrap="wrap">
+        <MenuIcon size="lg" color="textPrimary" />
+        <MoreHorizontalIcon size="lg" color="textPrimary" />
+        <MoreVerticalIcon size="lg" color="textPrimary" />
+        <EyeIcon size="lg" color="textPrimary" />
+        <EyeOffIcon size="lg" color="textPrimary" />
+        <HeartIcon size="lg" color="error" />
+        <StarIcon size="lg" color="warning" />
+        <SettingsIcon size="lg" color="textPrimary" />
+        <HomeIcon size="lg" color="textPrimary" />
+        <UserIcon size="lg" color="textPrimary" />
+        <RefreshIcon size="lg" color="textPrimary" />
+        <DownloadIcon size="lg" color="textPrimary" />
+        <ExternalLinkIcon size="lg" color="textPrimary" />
+      </HStack>
+
+      <Heading size="h4">不同尺寸</Heading>
+      <HStack space="m" alignItems="center">
+        <SearchIcon size="xs" color="textPrimary" />
+        <SearchIcon size="sm" color="textPrimary" />
+        <SearchIcon size="md" color="textPrimary" />
+        <SearchIcon size="lg" color="textPrimary" />
+        <SearchIcon size="xl" color="textPrimary" />
+      </HStack>
+
+      <Heading size="h4">主题色</Heading>
+      <HStack space="m" alignItems="center">
+        <HeartIcon size="lg" color="primary" />
+        <HeartIcon size="lg" color="secondary" />
+        <HeartIcon size="lg" color="success" />
+        <HeartIcon size="lg" color="warning" />
+        <HeartIcon size="lg" color="error" />
+      </HStack>
+
+      <Heading size="h4">createIcon 自定义图标</Heading>
+      <HStack space="m" alignItems="center">
+        <CustomIcon size="lg" color="primary" />
+        <CustomIcon size="xl" color="success" />
+      </HStack>
+    </VStack>
+  )
+}
+
 // ─── 演示注册表 ───────────────────────────────────
 
 /** 名称 -> 标题映射 */
@@ -1130,6 +1249,7 @@ const TITLE_MAP: Record<string, string> = {
   separator: "分隔符 Separator",
   steps: "步骤条 Steps",
   "page-container": "页面容器 PageContainer",
+  icon: "图标 Icon",
 }
 
 /** 名称 -> 演示组件映射 */
@@ -1168,6 +1288,7 @@ const DEMO_MAP: Record<string, React.ComponentType> = {
   separator: SeparatorDemo,
   steps: StepsDemo,
   "page-container": PageContainerDemo,
+  icon: IconDemo,
 }
 
 // ─── 详情页 ───────────────────────────────────────

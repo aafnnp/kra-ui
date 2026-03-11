@@ -60,6 +60,7 @@ const COMPONENT_GROUPS: CategoryGroup[] = [
       { name: "badge", title: "徽章 Badge" },
       { name: "avatar", title: "头像 Avatar" },
       { name: "accordion", title: "手风琴 Accordion" },
+      { name: "icon", title: "图标 Icon" },
     ],
   },
   {

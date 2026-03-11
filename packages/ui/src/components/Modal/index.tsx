@@ -10,6 +10,7 @@ import type {Theme} from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
 import type {BoxProps} from '../Box';
+import {CloseIcon} from '../Icon/icons';
 
 /** 弹窗尺寸 */
 type ModalSize = 'sm' | 'md' | 'lg' | 'full';
@@ -143,9 +144,7 @@ function ModalHeader({
           hitSlop={8}
           accessibilityRole="button"
           accessibilityLabel="关闭">
-          <Text fontSize={18} color="textSecondary">
-            ✕
-          </Text>
+          <CloseIcon size={18} color="textSecondary" />
         </Pressable>
       )}
     </Box>
