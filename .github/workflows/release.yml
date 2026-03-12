@@ -2,132 +2,39 @@ name: Release
 
 on:
   push:
-    tags: ["kra-ui@*.*.*"]
+    branches: ["master"]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  ci:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
-          node-version: 24
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Build
-        run: pnpm build
-
-  changesets:
-    if: github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/')
-    needs: ci
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
+          node-version: 20
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
       - run: pnpm install --frozen-lockfile
 
       - name: Create Release PR or Publish
+        id: changesets
         uses: changesets/action@v1
         with:
           version: pnpm version-packages
-          publish: pnpm publish-packages
+          publish: pnpm release
           title: "chore: version packages"
           commit: "chore: version packages"
+          createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.PR_GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_PACKAGE_TOKEN }}
-
-  release:
-    if: startsWith(github.ref, 'refs/tags/')
-    needs: ci
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build-apk:
-    if: startsWith(github.ref, 'refs/tags/')
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
-
-      - uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 17
-
-      - uses: nttld/setup-ndk@v1
-        with:
-          ndk-version: r27c
-          link-to-sdk: true
-
-      - uses: android-actions/setup-android@v3
-
-      - name: Disable New Architecture (CI only)
-        run: node -e "const fs=require('fs');const p='packages/example/app.json';const j=JSON.parse(fs.readFileSync(p,'utf8'));j.expo=j.expo||{};j.expo.newArchEnabled=false;fs.writeFileSync(p, JSON.stringify(j, null, 2)+\"\\n\");"
-
-      - name: Expo Prebuild
-        run: npx expo prebuild --platform android --no-install
-        working-directory: packages/example
-
-      - name: Make Gradle wrapper executable
-        run: chmod +x ./gradlew
-        working-directory: packages/example/android
-
-      - name: Build APK
-        run: ./gradlew assembleRelease
-        working-directory: packages/example/android
-        env:
-          # 避免 CI 上 Gradle 在依赖收集/打包阶段 OOM（Java heap space）
-          GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8" -Dkotlin.daemon.jvm.options="-Xmx2g" -Dorg.gradle.internal.http.connectionTimeout=60000 -Dorg.gradle.internal.http.socketTimeout=60000 -Dorg.gradle.internal.repository.max.retries=5 -Dorg.gradle.internal.repository.initial.backoff=1000
-          JAVA_TOOL_OPTIONS: -Xmx4g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8
-
-      - name: Rename APK
-        run: mv packages/example/android/app/build/outputs/apk/release/*.apk kra-ui-example-${{ github.ref_name }}.apk
-
-      - name: Upload APK to Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: kra-ui-example-${{ github.ref_name }}.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,41 @@
+name: Build APK
+
+on:
+  push:
+    tags: ["kra-ui@*.*.*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Expo Prebuild
+        run: npx expo prebuild --platform android --no-install
+        working-directory: packages/example
+
+      - name: Build APK
+        run: ./gradlew assembleRelease
+        working-directory: packages/example/android
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: kra-ui-example
+          path: packages/example/android/app/build/outputs/apk/release/*.apk
