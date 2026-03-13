@@ -1,5 +1,11 @@
 # kra-ui
 
+## 0.7.0
+
+### Minor Changes
+
+- [`45fdc05`](https://github.com/aafnnp/kra-ui/commit/45fdc0591d43ed6f4d82f11387b88b06ad30cc25) Thanks [@aafnnp](https://github.com/aafnnp)! - add Icon component
+
 ## 0.6.0
 
 ### Minor Changes
