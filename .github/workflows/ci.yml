@@ -2,7 +2,33 @@ name: CI
 
 on:
   push:
-    tags: ["kra-ui@*.*.*"]
+    branches:
+      - master
+    paths:
+      - 'packages/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.changeset/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'packages/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.changeset/**'
+      - '.github/workflows/ci.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   ci:
@@ -16,11 +42,23 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: pnpm lint
 
+      - name: Test
+        run: pnpm --filter kra-ui test -- --ci --runInBand
+
       - name: Build
         run: pnpm build
+
+      - name: Example type check
+        run: |
+          if node -e "const pkg=require('./packages/example/package.json');process.exit(pkg.scripts&&pkg.scripts.lint?0:1)"; then
+            pnpm --filter kra-ui-example lint
+          else
+            pnpm --filter kra-ui-example exec tsc --noEmit
+          fi

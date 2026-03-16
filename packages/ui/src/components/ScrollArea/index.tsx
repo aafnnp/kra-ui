@@ -1,9 +1,6 @@
-import React from 'react';
-import {ScrollView, type ScrollViewProps} from 'react-native';
-import {useTheme} from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import { ScrollView, type ScrollViewProps } from 'react-native';
 import Box from '../Box';
-import type {BoxProps} from '../Box';
+import type { BoxProps } from '../Box';
 
 export interface ScrollAreaProps extends BoxProps {
   /** 滚动方向，默认 vertical */

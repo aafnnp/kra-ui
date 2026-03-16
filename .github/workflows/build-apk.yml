@@ -3,10 +3,19 @@ name: Build APK
 on:
   push:
     tags: ["kra-ui@*.*.*"]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -16,6 +25,7 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
 
@@ -23,6 +33,7 @@ jobs:
         with:
           distribution: zulu
           java-version: 17
+          cache: gradle
 
       - uses: android-actions/setup-android@v3
 
@@ -37,5 +48,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: kra-ui-example
+          name: kra-ui-example-${{ github.ref_name }}-apk
           path: packages/example/android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 14

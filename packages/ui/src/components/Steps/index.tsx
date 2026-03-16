@@ -1,11 +1,11 @@
-import React, {useCallback, useMemo} from 'react';
-import {Pressable} from 'react-native';
-import {useTheme} from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import React, { useCallback, useMemo } from 'react';
+import { Pressable } from 'react-native';
+import { useTheme } from '@shopify/restyle';
+import type { Theme } from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
-import type {BoxProps} from '../Box';
-import {CheckIcon} from '../Icon/icons';
+import type { BoxProps } from '../Box';
+import { CheckIcon } from '../Icon/icons';
 
 /** 步骤状态 */
 type StepStatus = 'wait' | 'process' | 'finish' | 'error';
@@ -136,11 +136,9 @@ function StepIndicator({
 function StepConnector({
   status,
   orientation,
-  size,
 }: {
   status: 'finish' | 'pending';
   orientation: StepOrientation;
-  size: StepSize;
 }) {
   const isFinish = status === 'finish';
 
@@ -217,7 +215,6 @@ function Steps({
                 <StepConnector
                   status={item.resolvedStatus === 'finish' ? 'finish' : 'pending'}
                   orientation="horizontal"
-                  size={size}
                 />
               </Box>
             )}
@@ -336,7 +333,6 @@ function VerticalStep({
           <StepConnector
             status={status === 'finish' ? 'finish' : 'pending'}
             orientation="vertical"
-            size={size}
           />
         )}
       </Box>

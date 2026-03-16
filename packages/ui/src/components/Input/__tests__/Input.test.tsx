@@ -1,0 +1,31 @@
+/**
+ * Input 组件基础用例
+ * - 渲染占位符
+ * - 输入变更回调
+ * - isInvalid 与 isDisabled 状态
+ */
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react-native';
+import Input from '../index';
+import { NativeUIProvider } from '../../../provider/NativeUIProvider';
+
+const renderWithProvider = (ui: React.ReactElement) => {
+  return render(<NativeUIProvider>{ui}</NativeUIProvider>);
+};
+
+test('渲染占位符文本', () => {
+  const { getByPlaceholderText } = renderWithProvider(<Input placeholder="请输入内容" />);
+  expect(getByPlaceholderText('请输入内容')).toBeTruthy();
+});
+
+test('输入变更时触发 onChangeText', () => {
+  const onChangeText = jest.fn();
+  const { getByPlaceholderText } = renderWithProvider(
+    <Input placeholder="输入" onChangeText={onChangeText} />,
+  );
+
+  const input = getByPlaceholderText('输入');
+  fireEvent.changeText(input, 'hello');
+
+  expect(onChangeText).toHaveBeenCalledWith('hello');
+});

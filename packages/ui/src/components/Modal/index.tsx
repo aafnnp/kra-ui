@@ -1,16 +1,16 @@
-import React, {createContext, useContext, useCallback} from 'react';
+import React, { createContext, useContext, useCallback } from 'react';
 import {
-  Modal as RNModal,
-  Pressable,
-  StyleSheet,
-  useWindowDimensions,
+    Modal as RNModal,
+    Pressable,
+    StyleSheet,
+    useWindowDimensions,
 } from 'react-native';
-import {useTheme} from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import { useTheme } from '@shopify/restyle';
+import type { Theme } from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
-import type {BoxProps} from '../Box';
-import {CloseIcon} from '../Icon/icons';
+import type { BoxProps } from '../Box';
+import { CloseIcon } from '../Icon/icons';
 
 /** 弹窗尺寸 */
 type ModalSize = 'sm' | 'md' | 'lg' | 'full';
@@ -151,7 +151,7 @@ function ModalHeader({
   );
 }
 
-export interface ModalBodyProps extends BoxProps {}
+export type ModalBodyProps = BoxProps;
 
 /**
  * 弹窗内容区组件
@@ -164,7 +164,7 @@ function ModalBody({children, ...rest}: ModalBodyProps) {
   );
 }
 
-export interface ModalFooterProps extends BoxProps {}
+export type ModalFooterProps = BoxProps;
 
 /**
  * 弹窗底部操作栏组件
