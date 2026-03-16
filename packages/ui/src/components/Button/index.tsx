@@ -1,21 +1,18 @@
 import React from 'react';
-import {ActivityIndicator, Pressable, type PressableProps, type ViewStyle} from 'react-native';
+import { ActivityIndicator, Pressable, type PressableProps, type ViewStyle } from 'react-native';
 import {
-  createRestyleComponent,
-  createVariant,
-  spacing,
-  backgroundColor,
-  border,
-  useTheme,
-  type SpacingProps,
-  type BackgroundColorProps,
-  type BorderProps,
-  type VariantProps,
+    createRestyleComponent,
+    createVariant,
+    spacing,
+    backgroundColor,
+    border,
+    useTheme,
+    type VariantProps,
 } from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import type { Theme } from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
-import type {BoxProps} from '../Box';
+import type { BoxProps } from '../Box';
 
 type ButtonContainerProps = VariantProps<Theme, 'buttonVariants'> &
   React.ComponentProps<typeof Box>;

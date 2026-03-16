@@ -43,7 +43,6 @@ import {
   Accordion,
   Steps,
   PageContainer,
-  Icon,
   createIcon,
   ChevronUpIcon,
   ChevronDownIcon,
