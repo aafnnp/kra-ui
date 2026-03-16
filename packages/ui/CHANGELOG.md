@@ -1,5 +1,11 @@
 # kra-ui
 
+## 0.7.1
+
+### Patch Changes
+
+- [#17](https://github.com/aafnnp/kra-ui/pull/17) [`18340bc`](https://github.com/aafnnp/kra-ui/commit/18340bc0bde1857d0863b7478c00a106483ffd38) Thanks [@aafnnp](https://github.com/aafnnp)! - 1. add test,2. perf release flow
+
 ## 0.7.0
 
 ### Minor Changes
