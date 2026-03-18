@@ -1,24 +1,20 @@
-import React, {useEffect, useRef, useCallback} from 'react';
-import {StyleSheet, Pressable, useWindowDimensions} from 'react-native';
+import React, { useEffect, useRef, useCallback } from 'react';
+import type { StyleProp, ViewStyle } from 'react-native';
+import { StyleSheet, Pressable, useWindowDimensions } from 'react-native';
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-  runOnJS,
+    useSharedValue,
+    useAnimatedStyle,
+    withSpring,
+    withTiming,
+    runOnJS,
 } from 'react-native-reanimated';
-import {useTheme} from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import { useTheme } from '@shopify/restyle';
+import type { Theme } from '../../theme';
 import Text from '../Text';
-import {InfoIcon, CheckCircleIcon, AlertTriangleIcon, XCircleIcon} from '../Icon/icons';
-import {CloseIcon} from '../Icon/icons';
-import type {IconProps} from '../Icon';
-
-/** Toast 状态类型 */
-type ToastStatus = 'info' | 'success' | 'warning' | 'error';
-
-/** Toast 位置 */
-type ToastPlacement = 'top' | 'bottom';
+import { InfoIcon, CheckCircleIcon, AlertTriangleIcon, XCircleIcon } from '../Icon/icons';
+import { CloseIcon } from '../Icon/icons';
+import type { IconProps } from '../Icon';
+import type { ToastPlacement, ToastStatus } from './types';
 
 const statusIconMap: Record<ToastStatus, React.FC<IconProps>> = {
   info: InfoIcon,
@@ -39,6 +35,8 @@ export interface ToastProps {
   visible: boolean;
   /** 关闭回调 */
   onClose: () => void;
+  /** 标题（可选） */
+  title?: string;
   /** 提示内容 */
   message: string;
   /** 状态类型 */
@@ -49,6 +47,12 @@ export interface ToastProps {
   placement?: ToastPlacement;
   /** 是否可手动关闭 */
   closable?: boolean;
+  /** 操作按钮文案（可选） */
+  actionLabel?: string;
+  /** 操作按钮点击回调（可选） */
+  onActionPress?: () => void;
+  /** 外层容器样式（用于堆叠定位等场景） */
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 const TOAST_OFFSET = 60;
@@ -61,11 +65,15 @@ const TOAST_OFFSET = 60;
 function Toast({
   visible,
   onClose,
+  title,
   message,
   status = 'info',
   duration = 3000,
   placement = 'top',
   closable = true,
+  actionLabel,
+  onActionPress,
+  containerStyle,
 }: ToastProps) {
   const theme = useTheme<Theme>();
   const {width: screenWidth} = useWindowDimensions();
@@ -105,6 +113,14 @@ function Toast({
     animateOut(() => onClose());
   }, [animateOut, onClose]);
 
+  const handleActionPress = useCallback(() => {
+    if (!actionLabel || !onActionPress) {
+      return;
+    }
+    onActionPress();
+    handleClose();
+  }, [actionLabel, onActionPress, handleClose]);
+
   useEffect(() => {
     if (visible) {
       translateY.value = placement === 'top' ? -100 : 100;
@@ -129,6 +145,7 @@ function Toast({
 
   const colorKey = statusColorMap[status];
   const StatusIcon = statusIconMap[status];
+  const shouldRenderAction = Boolean(actionLabel && onActionPress);
 
   return (
     <Animated.View
@@ -136,6 +153,7 @@ function Toast({
         styles.container,
         placement === 'top' ? {top: TOAST_OFFSET} : {bottom: TOAST_OFFSET},
         animatedStyle,
+        containerStyle,
       ]}
       pointerEvents="box-none">
       <Pressable
@@ -150,9 +168,23 @@ function Toast({
           },
         ]}>
         <StatusIcon size={18} color={colorKey} />
-        <Text style={styles.message} numberOfLines={2} color="textPrimary">
-          {message}
-        </Text>
+        <Pressable style={styles.content} pointerEvents="none">
+          {title ? (
+            <Text style={styles.title} numberOfLines={1} color="textPrimary">
+              {title}
+            </Text>
+          ) : null}
+          <Text style={styles.message} numberOfLines={title ? 1 : 2} color="textPrimary">
+            {message}
+          </Text>
+        </Pressable>
+        {shouldRenderAction ? (
+          <Pressable onPress={handleActionPress} hitSlop={8} style={styles.action}>
+            <Text color="primary" numberOfLines={1}>
+              {actionLabel}
+            </Text>
+          </Pressable>
+        ) : null}
         {closable && (
           <Pressable onPress={handleClose} hitSlop={8}>
             <CloseIcon size={14} color="textSecondary" />
@@ -183,11 +215,22 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 6,
   },
-  message: {
+  content: {
     marginLeft: 10,
     flex: 1,
+  },
+  title: {
     fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  message: {
+    fontSize: 15,
+  },
+  action: {
+    marginRight: 8,
   },
 });
 
 export default Toast;
+

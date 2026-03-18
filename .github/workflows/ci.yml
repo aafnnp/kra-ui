@@ -50,7 +50,7 @@ jobs:
         run: pnpm lint
 
       - name: Test
-        run: pnpm --filter kra-ui test -- --ci --runInBand
+        run: pnpm --filter kra-ui test -- --ci --runInBand --watchman=false
 
       - name: Build
         run: pnpm build
