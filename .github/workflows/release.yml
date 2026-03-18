@@ -54,4 +54,5 @@ jobs:
           createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.PR_GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_PACKAGE_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
