@@ -160,6 +160,9 @@ export type {PopupProps} from './components/Popup';
 export {default as Toast} from './components/Toast';
 export type {ToastProps} from './components/Toast';
 
+export {toast, useToast} from './components/Toast';
+export type {ToastConfig, ToastShowOptions, ToastPlacement, ToastStatus} from './components/Toast';
+
 export {default as Tabs} from './components/Tabs';
 export type {TabsProps, TabItem} from './components/Tabs';
 

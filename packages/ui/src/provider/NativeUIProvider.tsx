@@ -1,7 +1,9 @@
-import React, {createContext, useCallback, useContext, useMemo, useState} from 'react';
-import {ThemeProvider} from '@shopify/restyle';
-import {theme as defaultTheme, darkTheme} from '../theme';
-import type {Theme} from '../theme';
+import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { ThemeProvider } from '@shopify/restyle';
+import { theme as defaultTheme, darkTheme } from '../theme';
+import type { Theme } from '../theme';
+import type { ToastConfig } from '../components/Toast';
+import { ToastHost, ToastProvider } from '../components/Toast';
 
 type ColorMode = 'light' | 'dark';
 
@@ -35,6 +37,8 @@ interface NativeUIProviderProps {
   darkTheme?: Theme;
   /** 初始颜色模式 */
   initialColorMode?: ColorMode;
+  /** Toast 全局配置 */
+  toastConfig?: ToastConfig;
 }
 
 /**
@@ -46,6 +50,7 @@ export function NativeUIProvider({
   lightTheme = defaultTheme,
   darkTheme: darkThemeProp = darkTheme,
   initialColorMode = 'light',
+  toastConfig,
 }: NativeUIProviderProps) {
   const [colorMode, setColorMode] = useState<ColorMode>(initialColorMode);
 
@@ -62,7 +67,12 @@ export function NativeUIProvider({
 
   return (
     <ColorModeContext.Provider value={contextValue}>
-      <ThemeProvider theme={currentTheme}>{children}</ThemeProvider>
+      <ThemeProvider theme={currentTheme}>
+        <ToastProvider config={toastConfig}>
+          {children}
+          <ToastHost />
+        </ToastProvider>
+      </ThemeProvider>
     </ColorModeContext.Provider>
   );
 }

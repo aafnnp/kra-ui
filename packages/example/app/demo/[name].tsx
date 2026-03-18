@@ -2,81 +2,82 @@ import React, { useState } from "react"
 import { Pressable } from "react-native"
 import { useLocalSearchParams, useRouter } from "expo-router"
 import {
-  Box,
-  Text,
-  Heading,
-  Button,
-  Input,
-  Switch,
-  Card,
-  Badge,
-  Avatar,
-  Spinner,
-  Alert,
-  Modal,
-  Popup,
-  Toast,
-  Tabs,
-  Dropdown,
-  Flex,
-  HStack,
-  VStack,
-  Center,
-  useColorMode,
-  AspectRatio,
-  Grid,
-  Group,
-  Separator,
-  Code,
-  Highlight,
-  Link,
-  List,
-  Checkbox,
-  NumberInput,
-  PasswordInput,
-  PinInput,
-  Radio,
-  RadioGroup,
-  Rating,
-  SegmentedControl,
-  Textarea,
-  Accordion,
-  Steps,
-  PageContainer,
-  createIcon,
-  ChevronUpIcon,
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-  CloseIcon,
-  CheckIcon,
-  PlusIcon,
-  MinusIcon,
-  SearchIcon,
-  EditIcon,
-  TrashIcon,
-  CopyIcon,
-  InfoIcon,
-  CheckCircleIcon,
-  AlertTriangleIcon,
-  XCircleIcon,
-  MenuIcon,
-  MoreHorizontalIcon,
-  MoreVerticalIcon,
-  EyeIcon,
-  EyeOffIcon,
-  HeartIcon,
-  StarIcon,
-  SettingsIcon,
-  HomeIcon,
-  UserIcon,
-  RefreshIcon,
-  DownloadIcon,
-  ExternalLinkIcon,
+    Box,
+    Text,
+    Heading,
+    Button,
+    Input,
+    Switch,
+    Card,
+    Badge,
+    Avatar,
+    Spinner,
+    Alert,
+    Modal,
+    Popup,
+    Toast,
+    toast,
+    Tabs,
+    Dropdown,
+    Flex,
+    HStack,
+    VStack,
+    Center,
+    useColorMode,
+    AspectRatio,
+    Grid,
+    Group,
+    Separator,
+    Code,
+    Highlight,
+    Link,
+    List,
+    Checkbox,
+    NumberInput,
+    PasswordInput,
+    PinInput,
+    Radio,
+    RadioGroup,
+    Rating,
+    SegmentedControl,
+    Textarea,
+    Accordion,
+    Steps,
+    PageContainer,
+    createIcon,
+    ChevronUpIcon,
+    ChevronDownIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    ArrowLeftIcon,
+    ArrowRightIcon,
+    ArrowUpIcon,
+    ArrowDownIcon,
+    CloseIcon,
+    CheckIcon,
+    PlusIcon,
+    MinusIcon,
+    SearchIcon,
+    EditIcon,
+    TrashIcon,
+    CopyIcon,
+    InfoIcon,
+    CheckCircleIcon,
+    AlertTriangleIcon,
+    XCircleIcon,
+    MenuIcon,
+    MoreHorizontalIcon,
+    MoreVerticalIcon,
+    EyeIcon,
+    EyeOffIcon,
+    HeartIcon,
+    StarIcon,
+    SettingsIcon,
+    HomeIcon,
+    UserIcon,
+    RefreshIcon,
+    DownloadIcon,
+    ExternalLinkIcon,
 } from "kra-ui"
 
 // ─── 各组件演示 ───────────────────────────────────
@@ -762,6 +763,61 @@ function ToastDemo() {
           />
         ))}
       </HStack>
+
+      <HStack
+        space="s"
+        flexWrap="wrap"
+        marginTop="s"
+      >
+        <Button
+          label="队列触发 5 条"
+          size="sm"
+          onPress={() => {
+            ;[1, 2, 3, 4, 5].forEach((i) => {
+              toast.show({
+                status: "info",
+                title: `第 ${i} 条`,
+                message: `这是队列 Toast（${i}）`,
+                duration: 2000,
+              })
+            })
+          }}
+        />
+        <Button
+          label="去重（同内容连点）"
+          variant="outline"
+          size="sm"
+          onPress={() => {
+            toast.success({
+              title: "去重示例",
+              message: "这条内容 1 秒内重复不会刷屏",
+              duration: 2500,
+            })
+            toast.success({
+              title: "去重示例",
+              message: "这条内容 1 秒内重复不会刷屏",
+              duration: 2500,
+            })
+          }}
+        />
+        <Button
+          label="带操作按钮"
+          variant="outline"
+          size="sm"
+          onPress={() => {
+            toast.show({
+              status: "warning",
+              title: "可撤销",
+              message: "已删除一条内容",
+              actionLabel: "撤销",
+              onActionPress: () => {
+                toast.info({ message: "已撤销", duration: 1500 })
+              },
+            })
+          }}
+        />
+      </HStack>
+
       <Toast
         visible={visible}
         onClose={() => setVisible(false)}
