@@ -241,6 +241,43 @@ const theme = createTheme({
       backgroundColor: "errorLight",
     },
   },
+
+  // Accordion 变体
+  accordionVariants: {
+    defaults: {},
+    outline: {
+      borderWidth: 1,
+      borderColor: "border",
+      borderRadius: "m",
+      overflow: "hidden" as const,
+    },
+    filled: {
+      borderWidth: 1,
+      borderColor: "border",
+      borderRadius: "m",
+      overflow: "hidden" as const,
+    },
+    separated: {
+      gap: "s",
+    },
+  },
+
+  accordionItemVariants: {
+    defaults: {},
+    separated: {
+      borderWidth: 1,
+      borderColor: "border",
+      borderRadius: "m",
+      overflow: "hidden" as const,
+    },
+  },
+
+  accordionHeaderVariants: {
+    defaults: {},
+    filled: {
+      backgroundColor: "primaryLight",
+    },
+  },
 })
 
 export type Theme = typeof theme
