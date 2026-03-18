@@ -6,10 +6,17 @@
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
+    "build:cloudflare": "vitepress build && NITRO_PRESET=cloudflare_pages nitro build",
+    "build:vercel": "vitepress build && NITRO_PRESET=vercel_static nitro build",
+    "build:spa": "vitepress build && NITRO_PRESET=static nitro build",
+    "build:node": "vitepress build && nitro build",
     "preview": "vitepress preview",
-    "clean": "rm -rf .vitepress/dist"
+    "preview:nitro": "node .output/server/index.mjs",
+    "clean": "rm -rf .vitepress/dist .output"
   },
   "devDependencies": {
+    "h3": "2.0.1-rc.16",
+    "nitropack": "^2.13.1",
     "vitepress": "^1.5.0"
   }
 }
