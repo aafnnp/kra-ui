@@ -28,7 +28,7 @@ test('默认使用 variant 渲染 title/message', () => {
 
 test('closable 时点击触发 onClose', () => {
   const onClose = jest.fn();
-  const {getByA11yLabel} = renderWithProvider(
+  const {getByLabelText} = renderWithProvider(
     <Alert
       variant="warning"
       title="警告"
@@ -38,7 +38,7 @@ test('closable 时点击触发 onClose', () => {
     />,
   );
 
-  fireEvent.press(getByA11yLabel('关闭提示'));
+  fireEvent.press(getByLabelText('关闭提示'));
 
   expect(onClose).toHaveBeenCalledTimes(1);
 });
