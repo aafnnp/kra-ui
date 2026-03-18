@@ -717,8 +717,12 @@ function AlertDemo() {
               flex={1}
               space="xs"
             >
-              <Alert.Title>插槽用法</Alert.Title>
-              <Alert.Description>可以自由组合标题、内容、操作与关闭按钮</Alert.Description>
+              <Alert.Title>
+                <Text>插槽用法</Text>
+              </Alert.Title>
+              <Alert.Description>
+                <Text>可以自由组合标题、内容、操作与关闭按钮</Text>
+              </Alert.Description>
             </VStack>
           </HStack>
           <Alert.Action>
