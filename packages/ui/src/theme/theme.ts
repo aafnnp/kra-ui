@@ -1,5 +1,5 @@
-import { createTheme } from "@shopify/restyle"
-import { palette } from "./palette"
+import { createTheme } from '@shopify/restyle';
+import { palette } from './palette';
 
 /**
  * 默认浅色主题
@@ -44,7 +44,7 @@ const theme = createTheme({
     divider: palette.gray200,
 
     // 遮罩
-    overlay: "rgba(0, 0, 0, 0.4)" as string,
+    overlay: 'rgba(0, 0, 0, 0.4)' as string,
 
     // 代码背景
     codeBackground: palette.gray100,
@@ -68,7 +68,7 @@ const theme = createTheme({
   },
 
   spacing: {
-    "0": 0,
+    '0': 0,
     xs: 4,
     s: 8,
     m: 16,
@@ -95,72 +95,72 @@ const theme = createTheme({
   // 文本变体
   textVariants: {
     defaults: {
-      color: "textPrimary",
+      color: 'textPrimary',
       fontSize: 16,
       lineHeight: 24,
     },
     header: {
       fontSize: 34,
-      fontWeight: "bold",
+      fontWeight: 'bold',
       lineHeight: 42,
-      color: "textPrimary",
+      color: 'textPrimary',
     },
     subheader: {
       fontSize: 24,
-      fontWeight: "600",
+      fontWeight: '600',
       lineHeight: 32,
-      color: "textPrimary",
+      color: 'textPrimary',
     },
     body: {
       fontSize: 16,
       lineHeight: 24,
-      color: "textPrimary",
+      color: 'textPrimary',
     },
     caption: {
       fontSize: 12,
       lineHeight: 16,
-      color: "textSecondary",
+      color: 'textSecondary',
     },
     label: {
       fontSize: 14,
-      fontWeight: "600",
+      fontWeight: '600',
       lineHeight: 20,
-      color: "textPrimary",
+      color: 'textPrimary',
     },
   },
 
   // 按钮变体
   buttonVariants: {
     defaults: {
-      paddingVertical: "s",
-      paddingHorizontal: "m",
-      borderRadius: "m",
+      paddingVertical: 's',
+      paddingHorizontal: 'm',
+      borderRadius: 'm',
     },
     filled: {
-      backgroundColor: "primary",
+      backgroundColor: 'primary',
     },
     outline: {
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
       borderWidth: 1,
-      borderColor: "primary",
+      borderColor: 'primary',
     },
     ghost: {
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
     },
     danger: {
-      backgroundColor: "error",
+      backgroundColor: 'error',
     },
   },
 
   // 卡片变体
   cardVariants: {
     defaults: {
-      padding: "m",
-      borderRadius: "l",
-      backgroundColor: "cardBackground",
+      padding: 'm',
+      borderRadius: 'l',
+      backgroundColor: 'cardBackground',
     },
     elevated: {
-      shadowColor: "textPrimary",
+      shadowColor: 'textPrimary',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 8,
@@ -168,104 +168,104 @@ const theme = createTheme({
     },
     outline: {
       borderWidth: 1,
-      borderColor: "border",
+      borderColor: 'border',
     },
     filled: {
-      backgroundColor: "primaryLight",
+      backgroundColor: 'primaryLight',
     },
   },
 
   // 徽章变体
   badgeVariants: {
     defaults: {
-      paddingVertical: "xs",
-      paddingHorizontal: "s",
-      borderRadius: "s",
+      paddingVertical: 'xs',
+      paddingHorizontal: 's',
+      borderRadius: 's',
     },
     solid: {
-      backgroundColor: "primary",
+      backgroundColor: 'primary',
     },
     subtle: {
-      backgroundColor: "primaryLight",
+      backgroundColor: 'primaryLight',
     },
     outline: {
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
       borderWidth: 1,
-      borderColor: "primary",
+      borderColor: 'primary',
     },
   },
 
   // 输入框变体
   inputVariants: {
     defaults: {
-      padding: "s",
-      borderRadius: "m",
+      padding: 's',
+      borderRadius: 'm',
       fontSize: 16,
-      color: "textPrimary",
+      color: 'textPrimary',
     },
     outline: {
       borderWidth: 1,
-      borderColor: "border",
-      backgroundColor: "inputBackground",
+      borderColor: 'border',
+      backgroundColor: 'inputBackground',
     },
     filled: {
-      backgroundColor: "primaryLight",
+      backgroundColor: 'primaryLight',
       borderWidth: 0,
     },
     underline: {
       borderBottomWidth: 1,
-      borderColor: "border",
-      borderRadius: "none",
-      paddingHorizontal: "0",
+      borderColor: 'border',
+      borderRadius: 'none',
+      paddingHorizontal: '0',
     },
   },
 
   // Alert 变体
   alertVariants: {
     defaults: {
-      padding: "m",
-      borderRadius: "m",
+      padding: 'm',
+      borderRadius: 'm',
       borderWidth: 1,
-      flexDirection: "row" as const,
-      alignItems: "center" as const,
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
     },
     info: {
-      backgroundColor: "primaryLight",
-      borderColor: "primary",
+      backgroundColor: 'primaryLight',
+      borderColor: 'primary',
     },
     success: {
-      backgroundColor: "successLight",
-      borderColor: "success",
+      backgroundColor: 'successLight',
+      borderColor: 'success',
     },
     warning: {
-      backgroundColor: "warningLight",
-      borderColor: "warning",
+      backgroundColor: 'warningLight',
+      borderColor: 'warning',
     },
     error: {
-      backgroundColor: "errorLight",
-      borderColor: "error",
+      backgroundColor: 'errorLight',
+      borderColor: 'error',
     },
   },
 
   // Alert 尺寸
   alertSizes: {
     sm: {
-      paddingX: "s",
-      paddingY: "s",
-      gap: "s",
+      paddingX: 's',
+      paddingY: 's',
+      gap: 's',
       iconSize: 16,
-      radius: "m",
-      titleTextVariant: "label",
-      messageTextVariant: "caption",
+      radius: 'm',
+      titleTextVariant: 'label',
+      messageTextVariant: 'caption',
     },
     md: {
-      paddingX: "m",
-      paddingY: "m",
-      gap: "s",
+      paddingX: 'm',
+      paddingY: 'm',
+      gap: 's',
       iconSize: 18,
-      radius: "m",
-      titleTextVariant: "label",
-      messageTextVariant: "body",
+      radius: 'm',
+      titleTextVariant: 'label',
+      messageTextVariant: 'body',
     },
   },
 
@@ -274,18 +274,18 @@ const theme = createTheme({
     defaults: {},
     outline: {
       borderWidth: 1,
-      borderColor: "border",
-      borderRadius: "m",
-      overflow: "hidden" as const,
+      borderColor: 'border',
+      borderRadius: 'm',
+      overflow: 'hidden' as const,
     },
     filled: {
       borderWidth: 1,
-      borderColor: "border",
-      borderRadius: "m",
-      overflow: "hidden" as const,
+      borderColor: 'border',
+      borderRadius: 'm',
+      overflow: 'hidden' as const,
     },
     separated: {
-      gap: "s",
+      gap: 's',
     },
   },
 
@@ -293,19 +293,78 @@ const theme = createTheme({
     defaults: {},
     separated: {
       borderWidth: 1,
-      borderColor: "border",
-      borderRadius: "m",
-      overflow: "hidden" as const,
+      borderColor: 'border',
+      borderRadius: 'm',
+      overflow: 'hidden' as const,
     },
   },
 
   accordionHeaderVariants: {
     defaults: {},
     filled: {
-      backgroundColor: "primaryLight",
+      backgroundColor: 'primaryLight',
     },
   },
-})
 
-export type Theme = typeof theme
-export default theme
+  // Avatar 尺寸（推荐 sm/md/lg，兼容 xs/xl）
+  avatarSizes: {
+    xs: {
+      dimension: 24,
+      fontSize: 10,
+      gap: 4,
+      ringWidth: 1,
+      statusSize: 6,
+    },
+    sm: {
+      dimension: 32,
+      fontSize: 12,
+      gap: 6,
+      ringWidth: 1,
+      statusSize: 8,
+    },
+    md: {
+      dimension: 48,
+      fontSize: 18,
+      gap: 8,
+      ringWidth: 2,
+      statusSize: 10,
+    },
+    lg: {
+      dimension: 64,
+      fontSize: 24,
+      gap: 10,
+      ringWidth: 2,
+      statusSize: 12,
+    },
+    xl: {
+      dimension: 96,
+      fontSize: 36,
+      gap: 12,
+      ringWidth: 2,
+      statusSize: 16,
+    },
+  },
+
+  // Avatar 回退态配色倾向
+  avatarVariants: {
+    solid: {
+      backgroundColor: 'primaryLight',
+      textColor: 'primary',
+    },
+    subtle: {
+      backgroundColor: 'codeBackground',
+      textColor: 'textSecondary',
+    },
+  },
+
+  // Avatar 状态色
+  avatarStatusColors: {
+    online: 'success',
+    offline: 'border',
+    busy: 'error',
+    away: 'warning',
+  },
+});
+
+export type Theme = typeof theme;
+export default theme;

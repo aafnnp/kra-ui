@@ -144,6 +144,9 @@ export type {CardProps} from './components/Card';
 export {default as Avatar} from './components/Avatar';
 export type {AvatarProps} from './components/Avatar';
 
+export {default as AvatarGroup} from './components/AvatarGroup';
+export type {AvatarGroupProps} from './components/AvatarGroup';
+
 // 反馈组件
 export {default as Spinner} from './components/Spinner';
 export type {SpinnerProps} from './components/Spinner';

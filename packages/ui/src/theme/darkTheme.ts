@@ -1,6 +1,6 @@
-import {createTheme} from '@shopify/restyle';
-import {palette} from './palette';
-import type {Theme} from './theme';
+import { createTheme } from '@shopify/restyle';
+import { palette } from './palette';
+import type { Theme } from './theme';
 
 /**
  * 暗色主题
@@ -141,7 +141,7 @@ const darkTheme = createTheme<Theme>({
     },
     elevated: {
       shadowColor: 'textPrimary',
-      shadowOffset: {width: 0, height: 2},
+      shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.15,
       shadowRadius: 8,
       elevation: 3,
@@ -172,6 +172,65 @@ const darkTheme = createTheme<Theme>({
       borderWidth: 1,
       borderColor: 'primary',
     },
+  },
+
+  // Avatar 尺寸（推荐 sm/md/lg，兼容 xs/xl）
+  avatarSizes: {
+    xs: {
+      dimension: 24,
+      fontSize: 10,
+      gap: 4,
+      ringWidth: 1,
+      statusSize: 6,
+    },
+    sm: {
+      dimension: 32,
+      fontSize: 12,
+      gap: 6,
+      ringWidth: 1,
+      statusSize: 8,
+    },
+    md: {
+      dimension: 48,
+      fontSize: 18,
+      gap: 8,
+      ringWidth: 2,
+      statusSize: 10,
+    },
+    lg: {
+      dimension: 64,
+      fontSize: 24,
+      gap: 10,
+      ringWidth: 2,
+      statusSize: 12,
+    },
+    xl: {
+      dimension: 96,
+      fontSize: 36,
+      gap: 12,
+      ringWidth: 2,
+      statusSize: 16,
+    },
+  },
+
+  // Avatar 回退态变体
+  avatarVariants: {
+    solid: {
+      backgroundColor: 'primaryLight',
+      textColor: 'primary',
+    },
+    subtle: {
+      backgroundColor: 'segmentedBackground',
+      textColor: 'textPrimary',
+    },
+  },
+
+  // Avatar 状态色映射
+  avatarStatusColors: {
+    online: 'success',
+    offline: 'border',
+    busy: 'error',
+    away: 'warning',
   },
 
   inputVariants: {

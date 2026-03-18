@@ -11,6 +11,7 @@ import {
     Card,
     Badge,
     Avatar,
+    AvatarGroup,
     Spinner,
     Alert,
     Modal,
@@ -509,27 +510,30 @@ function BadgeDemo() {
 
 function AvatarDemo() {
   return (
-    <HStack
-      space="s"
-      alignItems="center"
-    >
-      <Avatar
-        size="xs"
-        name="张三"
-      />
-      <Avatar
-        size="sm"
-        name="李四"
-      />
-      <Avatar
-        size="md"
-        name="王五"
-      />
-      <Avatar
-        size="lg"
-        name="John Doe"
-      />
-    </HStack>
+    <VStack space="m">
+      <Text variant="label" marginBottom="xs">尺寸</Text>
+      <HStack space="s" alignItems="center">
+        <Avatar size="xs" name="张三" />
+        <Avatar size="sm" name="李四" />
+        <Avatar size="md" name="王五" />
+        <Avatar size="lg" name="John Doe" />
+      </HStack>
+
+      <Text variant="label" marginTop="s" marginBottom="xs">状态角标</Text>
+      <HStack space="s" alignItems="center">
+        <Avatar name="在线" status="online" />
+        <Avatar name="忙碌" status="busy" />
+        <Avatar name="离开" status="away" />
+      </HStack>
+
+      <Text variant="label" marginTop="s" marginBottom="xs">AvatarGroup（max=3）</Text>
+      <AvatarGroup max={3}>
+        <Avatar name="A" />
+        <Avatar name="B" />
+        <Avatar name="C" />
+        <Avatar name="D" />
+      </AvatarGroup>
+    </VStack>
   )
 }
 
