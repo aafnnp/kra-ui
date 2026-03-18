@@ -145,3 +145,6 @@ android/
 
 # Builder bob output
 packages/ui/lib/
+
+# Git worktrees (local)
+.worktrees/
