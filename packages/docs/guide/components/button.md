@@ -34,6 +34,8 @@ import { Button } from 'kra-ui';
 <Button label="已禁用" isDisabled onPress={() => {}} />
 ```
 
+> 迁移提示：`loading` 将逐步弃用，推荐使用 `isLoading`。详见 `/guide/migration`。
+
 ## Props
 
 | 属性       | 类型                                           | 默认值     | 说明             |
@@ -41,6 +43,7 @@ import { Button } from 'kra-ui';
 | label      | `string`                                       | -          | 按钮文字（必填） |
 | variant    | `'filled' \| 'outline' \| 'ghost' \| 'danger'` | `'filled'` | 按钮变体         |
 | size       | `'sm' \| 'md' \| 'lg'`                         | `'md'`     | 按钮尺寸         |
-| loading    | `boolean`                                      | `false`    | 加载状态         |
+| isLoading  | `boolean`                                      | `false`    | 加载状态（推荐） |
+| loading    | `boolean`                                      | `false`    | 加载状态（兼容，后续弃用） |
 | isDisabled | `boolean`                                      | `false`    | 是否禁用         |
 | onPress    | `() => void`                                   | -          | 点击回调         |
