@@ -1,10 +1,5 @@
 import React, { createContext, useContext, useCallback } from 'react';
-import {
-    Modal as RNModal,
-    Pressable,
-    StyleSheet,
-    useWindowDimensions,
-} from 'react-native';
+import { Modal as RNModal, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTheme } from '@shopify/restyle';
 import type { Theme } from '../../theme';
 import Box from '../Box';
@@ -59,7 +54,7 @@ function Modal({
   children,
 }: ModalProps) {
   const theme = useTheme<Theme>();
-  const {width: screenWidth} = useWindowDimensions();
+  const { width: screenWidth } = useWindowDimensions();
 
   const handleOverlayPress = useCallback(() => {
     if (closeOnOverlay) {
@@ -68,21 +63,26 @@ function Modal({
   }, [closeOnOverlay, onClose]);
 
   const widthFactor = sizeWidthMap[size];
-  const contentWidth =
-    typeof widthFactor === 'number' ? screenWidth * widthFactor : screenWidth;
+  const contentWidth = typeof widthFactor === 'number' ? screenWidth * widthFactor : screenWidth;
 
   const isFullScreen = size === 'full';
 
   return (
-    <ModalContext.Provider value={{onClose}}>
+    <ModalContext.Provider value={{ onClose }}>
       <RNModal
         visible={visible}
         transparent
         animationType={animationType}
         onRequestClose={onClose}
-        statusBarTranslucent>
-        <Pressable style={styles.overlay} onPress={handleOverlayPress}>
+        statusBarTranslucent
+      >
+        <Pressable
+          testID="native-ui-modal-overlay"
+          style={[styles.overlay, { backgroundColor: theme.colors.overlay }]}
+          onPress={handleOverlayPress}
+        >
           <Pressable
+            testID="native-ui-modal-content"
             style={[
               styles.content,
               {
@@ -92,7 +92,8 @@ function Modal({
                 maxHeight: isFullScreen ? '100%' : '85%',
               },
               isFullScreen && styles.fullScreen,
-            ]}>
+            ]}
+          >
             {children}
           </Pressable>
         </Pressable>
@@ -112,13 +113,8 @@ export interface ModalHeaderProps extends BoxProps {
  * 弹窗头部组件
  * 支持标题和关闭按钮
  */
-function ModalHeader({
-  title,
-  showClose = true,
-  children,
-  ...rest
-}: ModalHeaderProps) {
-  const {onClose} = useContext(ModalContext);
+function ModalHeader({ title, showClose = true, children, ...rest }: ModalHeaderProps) {
+  const { onClose } = useContext(ModalContext);
 
   return (
     <Box
@@ -128,7 +124,8 @@ function ModalHeader({
       padding="m"
       borderBottomWidth={1}
       borderColor="border"
-      {...rest}>
+      {...rest}
+    >
       <Box flex={1}>
         {title ? (
           <Text fontWeight="600" fontSize={18}>
@@ -143,7 +140,8 @@ function ModalHeader({
           onPress={onClose}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel="关闭">
+          accessibilityLabel="关闭"
+        >
           <CloseIcon size={18} color="textSecondary" />
         </Pressable>
       )}
@@ -156,7 +154,7 @@ export type ModalBodyProps = BoxProps;
 /**
  * 弹窗内容区组件
  */
-function ModalBody({children, ...rest}: ModalBodyProps) {
+function ModalBody({ children, ...rest }: ModalBodyProps) {
   return (
     <Box padding="m" flex={1} {...rest}>
       {children}
@@ -169,7 +167,7 @@ export type ModalFooterProps = BoxProps;
 /**
  * 弹窗底部操作栏组件
  */
-function ModalFooter({children, ...rest}: ModalFooterProps) {
+function ModalFooter({ children, ...rest }: ModalFooterProps) {
   return (
     <Box
       flexDirection="row"
@@ -179,7 +177,8 @@ function ModalFooter({children, ...rest}: ModalFooterProps) {
       gap="s"
       borderTopWidth={1}
       borderColor="border"
-      {...rest}>
+      {...rest}
+    >
       {children}
     </Box>
   );
@@ -190,19 +189,18 @@ Modal.Body = ModalBody;
 Modal.Footer = ModalFooter;
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   content: {
     overflow: 'hidden',
   },
   fullScreen: {
     flex: 1,
   },
+  overlay: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
 });
 
-export {ModalHeader, ModalBody, ModalFooter};
+export { ModalHeader, ModalBody, ModalFooter };
 export default Modal;

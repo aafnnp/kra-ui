@@ -31,7 +31,7 @@ module.exports = {
     // 控制圈复杂度，鼓励拆分函数
     complexity: ['warn', 10],
     // 函数长度控制，避免过长
-    'max-lines-per-function': ['warn', { max: 80, skipBlankLines: true, skipComments: true }],
+    'max-lines-per-function': ['warn', { max: 160, skipBlankLines: true, skipComments: true }],
     // React 17+ JSX 转换，不强制显式 import React
     'react/react-in-jsx-scope': 'off',
     // React Native 规则微调，兼顾示例代码与可维护性

@@ -63,5 +63,8 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Docs build
+        run: pnpm --filter kra-ui-docs build
+
       - name: Example type check
         run: pnpm --filter kra-ui-example typecheck

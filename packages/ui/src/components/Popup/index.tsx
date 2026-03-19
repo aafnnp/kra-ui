@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useCallback} from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import {
   Modal as RNModal,
   Pressable,
@@ -13,8 +13,8 @@ import Animated, {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
-import {useTheme} from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import { useTheme } from '@shopify/restyle';
+import type { Theme } from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
 
@@ -63,7 +63,7 @@ function Popup({
   children,
 }: PopupProps) {
   const theme = useTheme<Theme>();
-  const {height: screenHeight} = useWindowDimensions();
+  const { height: screenHeight } = useWindowDimensions();
   const screenHeightRef = useRef(screenHeight);
   screenHeightRef.current = screenHeight;
 
@@ -76,18 +76,18 @@ function Popup({
   }));
 
   const containerStyle = useAnimatedStyle(() => ({
-    transform: [{translateY: slideAnim.value + dragY.value}],
+    transform: [{ translateY: slideAnim.value + dragY.value }],
   }));
 
   const animateIn = useCallback(() => {
-    slideAnim.value = withSpring(0, {stiffness: 65, damping: 11});
-    overlayAnim.value = withTiming(1, {duration: 250});
+    slideAnim.value = withSpring(0, { stiffness: 65, damping: 11 });
+    overlayAnim.value = withTiming(1, { duration: 250 });
   }, [slideAnim, overlayAnim]);
 
   const animateOut = useCallback(
     (callback?: () => void) => {
-      slideAnim.value = withTiming(screenHeightRef.current, {duration: 250});
-      overlayAnim.value = withTiming(0, {duration: 200}, finished => {
+      slideAnim.value = withTiming(screenHeightRef.current, { duration: 250 });
+      overlayAnim.value = withTiming(0, { duration: 200 }, (finished) => {
         if (finished && callback) {
           runOnJS(callback)();
         }
@@ -132,16 +132,13 @@ function Popup({
         if (gestureState.dy > SWIPE_THRESHOLD) {
           handleCloseRef.current();
         } else {
-          dragY.value = withSpring(0, {stiffness: 65, damping: 11});
+          dragY.value = withSpring(0, { stiffness: 65, damping: 11 });
         }
       },
     }),
   ).current;
 
-  const panelHeight =
-    typeof height === 'number'
-      ? screenHeight * height
-      : undefined;
+  const panelHeight = typeof height === 'number' ? screenHeight * height : undefined;
 
   return (
     <RNModal
@@ -149,17 +146,18 @@ function Popup({
       transparent
       animationType="none"
       onRequestClose={handleClose}
-      statusBarTranslucent>
-      <Animated.View style={[styles.overlay, overlayStyle]}>
+      statusBarTranslucent
+    >
+      <Animated.View
+        style={[styles.overlay, { backgroundColor: theme.colors.overlay }, overlayStyle]}
+      >
         <Pressable
           style={StyleSheet.absoluteFill}
           onPress={closeOnOverlay ? handleClose : undefined}
         />
       </Animated.View>
 
-      <Animated.View
-        style={[styles.container, containerStyle]}
-        {...panResponder.panHandlers}>
+      <Animated.View style={[styles.container, containerStyle]} {...panResponder.panHandlers}>
         <Box
           style={[
             styles.panel,
@@ -170,15 +168,11 @@ function Popup({
               borderTopLeftRadius: rounded ? theme.borderRadii.xl : 0,
               borderTopRightRadius: rounded ? theme.borderRadii.xl : 0,
             },
-          ]}>
+          ]}
+        >
           {showHandle && (
             <Box alignItems="center" paddingTop="s" paddingBottom="xs">
-              <Box
-                style={[
-                  styles.handle,
-                  {backgroundColor: theme.colors.border},
-                ]}
-              />
+              <Box style={[styles.handle, { backgroundColor: theme.colors.border }]} />
             </Box>
           )}
 
@@ -188,7 +182,8 @@ function Popup({
               alignItems="center"
               justifyContent="space-between"
               paddingHorizontal="m"
-              paddingVertical="s">
+              paddingVertical="s"
+            >
               <Text fontWeight="600" fontSize={18} flex={1}>
                 {title || ''}
               </Text>
@@ -197,7 +192,8 @@ function Popup({
                   onPress={handleClose}
                   hitSlop={8}
                   accessibilityRole="button"
-                  accessibilityLabel="关闭">
+                  accessibilityLabel="关闭"
+                >
                   <Text fontSize={18} color="textSecondary">
                     ✕
                   </Text>
@@ -218,7 +214,6 @@ function Popup({
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   container: {
     position: 'absolute',

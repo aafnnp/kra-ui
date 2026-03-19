@@ -1,32 +1,29 @@
 import React from 'react';
-import { ActivityIndicator, Pressable, type PressableProps, type ViewStyle } from 'react-native';
+import { ActivityIndicator, type PressableProps } from 'react-native';
 import {
-    createRestyleComponent,
-    createVariant,
-    spacing,
-    backgroundColor,
-    border,
-    useTheme,
-    type VariantProps,
+  backgroundColor,
+  border,
+  createRestyleComponent,
+  createVariant,
+  spacing,
+  useTheme,
+  type VariantProps,
 } from '@shopify/restyle';
 import type { Theme } from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
 import type { BoxProps } from '../Box';
+import { InteractivePressable } from '../_shared/pressable';
+import { getAccessibilityLabel } from '../_shared/a11y';
+import { normalizeInteractiveState } from '../_shared/state';
 
 type ButtonContainerProps = VariantProps<Theme, 'buttonVariants'> &
   React.ComponentProps<typeof Box>;
 
 const ButtonContainer = createRestyleComponent<ButtonContainerProps, Theme>(
-  [createVariant({themeKey: 'buttonVariants'}), spacing, backgroundColor, border],
+  [createVariant({ themeKey: 'buttonVariants' }), spacing, backgroundColor, border],
   Box,
 );
-
-const sizeMap: Record<string, {paddingVertical: number; paddingHorizontal: number; fontSize: number}> = {
-  sm: {paddingVertical: 4, paddingHorizontal: 12, fontSize: 14},
-  md: {paddingVertical: 8, paddingHorizontal: 16, fontSize: 16},
-  lg: {paddingVertical: 12, paddingHorizontal: 24, fontSize: 18},
-};
 
 export interface ButtonProps extends BoxProps {
   /** 按钮文字 */
@@ -36,11 +33,13 @@ export interface ButtonProps extends BoxProps {
   /** 尺寸 */
   size?: 'sm' | 'md' | 'lg';
   /** 加载状态 */
-  loading?: boolean;
+  isLoading?: boolean;
   /** 是否禁用 */
   isDisabled?: boolean;
   /** 点击事件 */
   onPress?: PressableProps['onPress'];
+  /** 无障碍标签（默认使用 label） */
+  accessibilityLabel?: string;
 }
 
 /**
@@ -52,47 +51,48 @@ function Button({
   label,
   variant = 'filled',
   size = 'md',
-  loading = false,
+  isLoading = false,
   isDisabled = false,
   onPress,
+  accessibilityLabel,
   ...rest
 }: ButtonProps) {
   const theme = useTheme<Theme>();
-  const sizeStyle = sizeMap[size];
+  const sizeStyle = theme.buttonSizes[size];
 
   const isOutlineOrGhost = variant === 'outline' || variant === 'ghost';
-  const textColor = isOutlineOrGhost
-    ? theme.colors.primary
-    : theme.colors.textInverse;
+  const textColor = isOutlineOrGhost ? theme.colors.primary : theme.colors.textInverse;
 
-  const pressableStyle: ViewStyle = {
-    paddingVertical: sizeStyle.paddingVertical,
-    paddingHorizontal: sizeStyle.paddingHorizontal,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    opacity: isDisabled ? 0.5 : 1,
-  };
+  const normalized = normalizeInteractiveState({ isDisabled, isLoading });
 
   return (
-    <Pressable
+    <InteractivePressable
       onPress={onPress}
-      disabled={isDisabled || loading}
+      isDisabled={isDisabled}
+      isLoading={isLoading}
       accessibilityRole="button"
-      accessibilityState={{disabled: isDisabled || loading}}>
-      <ButtonContainer variant={variant} style={pressableStyle} {...rest}>
-        {loading && (
-          <ActivityIndicator
-            size="small"
-            color={textColor}
-            style={{marginRight: 8}}
-          />
+      accessibilityLabel={getAccessibilityLabel({ label, accessibilityLabel })}
+      accessibilityState={normalized.accessibilityState}
+    >
+      <ButtonContainer
+        variant={variant}
+        paddingVertical={sizeStyle.paddingVertical}
+        paddingHorizontal={sizeStyle.paddingHorizontal}
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="row"
+        {...rest}
+      >
+        {isLoading && (
+          <Box marginRight="s">
+            <ActivityIndicator size="small" color={textColor} />
+          </Box>
         )}
-        <Text style={{color: textColor, fontSize: sizeStyle.fontSize, fontWeight: '600'}}>
+        <Text style={{ color: textColor, fontSize: sizeStyle.fontSize, fontWeight: '600' }}>
           {label}
         </Text>
       </ButtonContainer>
-    </Pressable>
+    </InteractivePressable>
   );
 }
 
