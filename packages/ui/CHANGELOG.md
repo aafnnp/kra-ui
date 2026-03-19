@@ -1,5 +1,17 @@
 # kra-ui
 
+## 1.0.0
+
+### Major Changes
+
+- [#27](https://github.com/aafnnp/kra-ui/pull/27) [`c355905`](https://github.com/aafnnp/kra-ui/commit/c3559059ed73221bb0a3aecb5ae591d14db45fc2) Thanks [@aafnnp](https://github.com/aafnnp)! - ## 破坏性变更
+  - `Button` 移除 `loading`，统一使用 `isLoading`。
+
+  ## 改进
+  - 新增 `components/_shared`：统一交互态归一化与 a11y Pressable 封装。
+  - `Modal` 补齐遮罩点击关闭行为测试与验证。
+  - `Popup`/`PageContainer` 遮罩与间距从硬编码迁移到主题 token（`theme.colors.overlay` / `theme.spacing`）。
+
 ## 0.8.2
 
 ### Patch Changes
