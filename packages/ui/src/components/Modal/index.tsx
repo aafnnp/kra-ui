@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback } from 'react';
+import React, { createContext, useCallback, useContext, useMemo } from 'react';
 import { Modal as RNModal, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTheme } from '@shopify/restyle';
 import type { Theme } from '../../theme';
@@ -54,7 +54,7 @@ function Modal({
   children,
 }: ModalProps) {
   const theme = useTheme<Theme>();
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   const handleOverlayPress = useCallback(() => {
     if (closeOnOverlay) {
@@ -66,6 +66,24 @@ function Modal({
   const contentWidth = typeof widthFactor === 'number' ? screenWidth * widthFactor : screenWidth;
 
   const isFullScreen = size === 'full';
+  const maxHeight = isFullScreen ? screenHeight : screenHeight * 0.85;
+  const overlayStyle = useMemo(
+    () => [styles.overlay, { backgroundColor: theme.colors.overlay }],
+    [theme.colors.overlay],
+  );
+  const contentStyle = useMemo(
+    () => [
+      styles.content,
+      {
+        width: contentWidth,
+        backgroundColor: theme.colors.cardBackground,
+        borderRadius: isFullScreen ? 0 : theme.borderRadii.l,
+        maxHeight,
+      },
+      isFullScreen && styles.fullScreen,
+    ],
+    [contentWidth, isFullScreen, maxHeight, theme.borderRadii.l, theme.colors.cardBackground],
+  );
 
   return (
     <ModalContext.Provider value={{ onClose }}>
@@ -78,22 +96,10 @@ function Modal({
       >
         <Pressable
           testID="native-ui-modal-overlay"
-          style={[styles.overlay, { backgroundColor: theme.colors.overlay }]}
+          style={overlayStyle}
           onPress={handleOverlayPress}
         >
-          <Pressable
-            testID="native-ui-modal-content"
-            style={[
-              styles.content,
-              {
-                width: contentWidth,
-                backgroundColor: theme.colors.cardBackground,
-                borderRadius: isFullScreen ? 0 : theme.borderRadii.l,
-                maxHeight: isFullScreen ? '100%' : '85%',
-              },
-              isFullScreen && styles.fullScreen,
-            ]}
-          >
+          <Pressable testID="native-ui-modal-content" style={contentStyle}>
             {children}
           </Pressable>
         </Pressable>

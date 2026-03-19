@@ -1,10 +1,5 @@
-import React, {useState, useRef, useCallback, useEffect} from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  type LayoutChangeEvent,
-  ScrollView,
-} from 'react-native';
+import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
+import { Pressable, StyleSheet, type LayoutChangeEvent, ScrollView } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -12,11 +7,11 @@ import Animated, {
   withTiming,
   withSequence,
 } from 'react-native-reanimated';
-import {useTheme} from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import { useTheme } from '@shopify/restyle';
+import type { Theme } from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
-import type {BoxProps} from '../Box';
+import type { BoxProps } from '../Box';
 
 export interface TabItem {
   /** 选项卡标签 */
@@ -43,9 +38,9 @@ export interface TabsProps extends BoxProps {
 }
 
 const sizeMap = {
-  sm: {paddingVertical: 6, paddingHorizontal: 12, fontSize: 13},
-  md: {paddingVertical: 10, paddingHorizontal: 16, fontSize: 15},
-  lg: {paddingVertical: 14, paddingHorizontal: 20, fontSize: 17},
+  sm: { paddingVertical: 6, paddingHorizontal: 12, fontSize: 13 },
+  md: { paddingVertical: 10, paddingHorizontal: 16, fontSize: 15 },
+  lg: { paddingVertical: 14, paddingHorizontal: 20, fontSize: 17 },
 };
 
 /**
@@ -65,9 +60,16 @@ function Tabs({
 }: TabsProps) {
   const theme = useTheme<Theme>();
   const s = sizeMap[size];
+  const tabPaddingStyle = useMemo(
+    () => ({
+      paddingVertical: s.paddingVertical,
+      paddingHorizontal: s.paddingHorizontal,
+    }),
+    [s.paddingHorizontal, s.paddingVertical],
+  );
 
   const [currentKey, setCurrentKey] = useState(activeKey || items[0]?.key || '');
-  const tabLayouts = useRef<Record<string, {x: number; width: number}>>({});
+  const tabLayouts = useRef<Record<string, { x: number; width: number }>>({});
   const indicatorLeft = useSharedValue(0);
   const indicatorWidth = useSharedValue(0);
   const contentOpacity = useSharedValue(1);
@@ -88,8 +90,8 @@ function Tabs({
       const layout = tabLayouts.current[key];
       if (!layout) return;
 
-      indicatorLeft.value = withSpring(layout.x, {stiffness: 80, damping: 12});
-      indicatorWidth.value = withSpring(layout.width, {stiffness: 80, damping: 12});
+      indicatorLeft.value = withSpring(layout.x, { stiffness: 80, damping: 12 });
+      indicatorWidth.value = withSpring(layout.width, { stiffness: 80, damping: 12 });
     },
     [indicatorLeft, indicatorWidth],
   );
@@ -99,8 +101,8 @@ function Tabs({
       if (key === effectiveKey) return;
 
       contentOpacity.value = withSequence(
-        withTiming(0, {duration: 100}),
-        withTiming(1, {duration: 150}),
+        withTiming(0, { duration: 100 }),
+        withTiming(1, { duration: 150 }),
       );
 
       if (!activeKey) {
@@ -118,8 +120,8 @@ function Tabs({
 
   const handleTabLayout = useCallback(
     (key: string, event: LayoutChangeEvent) => {
-      const {x, width} = event.nativeEvent.layout;
-      tabLayouts.current[key] = {x, width};
+      const { x, width } = event.nativeEvent.layout;
+      tabLayouts.current[key] = { x, width };
 
       if (key === effectiveKey) {
         animateIndicator(key);
@@ -129,22 +131,20 @@ function Tabs({
   );
 
   const renderTabBar = () => {
-    const tabItems = items.map(item => {
+    const tabItems = items.map((item) => {
       const isActive = item.key === effectiveKey;
+      const labelColorKey =
+        variant === 'pill' && isActive ? 'textInverse' : isActive ? 'primary' : 'textSecondary';
 
       const tabStyle =
         variant === 'pill'
           ? {
-              backgroundColor: isActive
-                ? theme.colors.primary
-                : 'transparent',
+              backgroundColor: isActive ? theme.colors.primary : 'transparent',
               borderRadius: theme.borderRadii.full,
             }
           : variant === 'filled'
             ? {
-                backgroundColor: isActive
-                  ? theme.colors.primaryLight
-                  : 'transparent',
+                backgroundColor: isActive ? theme.colors.primaryLight : 'transparent',
                 borderRadius: theme.borderRadii.m,
               }
             : {};
@@ -153,29 +153,13 @@ function Tabs({
         <Pressable
           key={item.key}
           onPress={() => handleTabPress(item.key)}
-          onLayout={e => handleTabLayout(item.key, e)}
+          onLayout={(e) => handleTabLayout(item.key, e)}
           testID={`native-ui-tabs-tab-${item.key}`}
           accessibilityRole="tab"
-          accessibilityState={{selected: isActive}}>
-          <Box
-            style={[
-              {
-                paddingVertical: s.paddingVertical,
-                paddingHorizontal: s.paddingHorizontal,
-              },
-              tabStyle,
-            ]}>
-            <Text
-              style={{
-                fontSize: s.fontSize,
-                fontWeight: isActive ? '600' : '400',
-                color:
-                  variant === 'pill' && isActive
-                    ? theme.colors.textInverse
-                    : isActive
-                      ? theme.colors.primary
-                      : theme.colors.textSecondary,
-              }}>
+          accessibilityState={{ selected: isActive }}
+        >
+          <Box style={[tabPaddingStyle, tabStyle]}>
+            <Text fontSize={s.fontSize} fontWeight={isActive ? '600' : '400'} color={labelColorKey}>
               {item.label}
             </Text>
           </Box>
@@ -194,24 +178,18 @@ function Tabs({
     return <Box flexDirection="row">{tabItems}</Box>;
   };
 
-  const activeIndex = items.findIndex(item => item.key === effectiveKey);
+  const activeIndex = items.findIndex((item) => item.key === effectiveKey);
   const childArray = React.Children.toArray(children);
   const activeContent = childArray[activeIndex] || null;
 
   return (
     <Box {...rest}>
-      <Box
-        borderBottomWidth={variant === 'underline' ? 1 : 0}
-        borderColor="border">
+      <Box borderBottomWidth={variant === 'underline' ? 1 : 0} borderColor="border">
         {renderTabBar()}
 
         {variant === 'underline' && (
           <Animated.View
-            style={[
-              styles.indicator,
-              {backgroundColor: theme.colors.primary},
-              indicatorStyle,
-            ]}
+            style={[styles.indicator, { backgroundColor: theme.colors.primary }, indicatorStyle]}
           />
         )}
       </Box>
@@ -227,10 +205,10 @@ function Tabs({
 
 const styles = StyleSheet.create({
   indicator: {
-    position: 'absolute',
+    borderRadius: 1,
     bottom: 0,
     height: 2,
-    borderRadius: 1,
+    position: 'absolute',
   },
 });
 

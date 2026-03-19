@@ -1,19 +1,20 @@
-import React from 'react';
-import {Pressable} from 'react-native';
-import {useTheme} from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import { useMemo } from 'react';
+import { Pressable } from 'react-native';
 import Input from '../Input';
-import type {InputProps} from '../Input';
+import type { InputProps } from '../Input';
 import Box from '../Box';
 import Text from '../Text';
 
 const sizeMap = {
-  sm: {buttonSize: 28, fontSize: 16},
-  md: {buttonSize: 36, fontSize: 20},
-  lg: {buttonSize: 44, fontSize: 24},
+  sm: { buttonSize: 28, fontSize: 16 },
+  md: { buttonSize: 36, fontSize: 20 },
+  lg: { buttonSize: 44, fontSize: 24 },
 };
 
-export interface NumberInputProps extends Omit<InputProps, 'value' | 'onChangeText' | 'keyboardType' | 'onChange'> {
+export interface NumberInputProps extends Omit<
+  InputProps,
+  'value' | 'onChangeText' | 'keyboardType' | 'onChange'
+> {
   /** 当前数值 */
   value?: number;
   /** 数值变更回调 */
@@ -40,8 +41,16 @@ function NumberInput({
   isDisabled = false,
   ...rest
 }: NumberInputProps) {
-  const theme = useTheme<Theme>();
   const s = sizeMap[size];
+  const stepButtonBoxStyle = useMemo(
+    () => ({
+      width: s.buttonSize,
+      height: s.buttonSize,
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+    }),
+    [s.buttonSize],
+  );
 
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
 
@@ -64,22 +73,18 @@ function NumberInput({
     }
   };
 
-  const StepButton = ({label, onPress, disabled}: {label: string; onPress: () => void; disabled: boolean}) => (
+  const StepButton = ({
+    label,
+    onPress,
+    disabled,
+  }: {
+    label: string;
+    onPress: () => void;
+    disabled: boolean;
+  }) => (
     <Pressable onPress={onPress} disabled={disabled || isDisabled}>
-      <Box
-        style={{
-          width: s.buttonSize,
-          height: s.buttonSize,
-          alignItems: 'center',
-          justifyContent: 'center',
-          opacity: disabled || isDisabled ? 0.3 : 1,
-        }}>
-        <Text
-          style={{
-            fontSize: s.fontSize,
-            color: theme.colors.primary,
-            fontWeight: '600',
-          }}>
+      <Box style={stepButtonBoxStyle} opacity={disabled || isDisabled ? 0.3 : 1}>
+        <Text fontSize={s.fontSize} color="primary" fontWeight="600">
           {label}
         </Text>
       </Box>
@@ -93,12 +98,8 @@ function NumberInput({
       keyboardType="numeric"
       size={size}
       isDisabled={isDisabled}
-      leftElement={
-        <StepButton label="−" onPress={handleDecrement} disabled={value <= min} />
-      }
-      rightElement={
-        <StepButton label="+" onPress={handleIncrement} disabled={value >= max} />
-      }
+      leftElement={<StepButton label="−" onPress={handleDecrement} disabled={value <= min} />}
+      rightElement={<StepButton label="+" onPress={handleIncrement} disabled={value >= max} />}
       {...rest}
     />
   );

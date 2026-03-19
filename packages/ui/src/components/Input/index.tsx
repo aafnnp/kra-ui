@@ -83,6 +83,25 @@ function Input({
       }
     | undefined;
   const sizeTokens = theme.inputSizes?.[size];
+  const containerStyle = useMemo(
+    () => ({
+      height: sizeTokens?.height,
+      borderColor: stateTokens?.borderColor,
+      backgroundColor: stateTokens?.backgroundColor,
+    }),
+    [sizeTokens?.height, stateTokens?.backgroundColor, stateTokens?.borderColor],
+  );
+  const inputStyle = useMemo(
+    () => ({
+      flex: 1,
+      fontSize: sizeTokens?.fontSize ?? 16,
+      color: stateTokens?.textColor
+        ? theme.colors[stateTokens.textColor]
+        : theme.colors.textPrimary,
+      paddingVertical: 0,
+    }),
+    [sizeTokens?.fontSize, stateTokens?.textColor, theme.colors],
+  );
 
   return (
     <InputContainer
@@ -90,11 +109,7 @@ function Input({
       flexDirection="row"
       alignItems="center"
       opacity={isDisabled ? 0.5 : 1}
-      style={{
-        height: sizeTokens?.height,
-        borderColor: stateTokens?.borderColor,
-        backgroundColor: stateTokens?.backgroundColor,
-      }}
+      style={containerStyle}
       {...rest}
     >
       {leftElement}
@@ -115,14 +130,7 @@ function Input({
           setIsFocused(false);
           onBlur?.(e);
         }}
-        style={{
-          flex: 1,
-          fontSize: sizeTokens?.fontSize ?? 16,
-          color: stateTokens?.textColor
-            ? theme.colors[stateTokens.textColor]
-            : theme.colors.textPrimary,
-          paddingVertical: 0,
-        }}
+        style={inputStyle}
       />
       {rightElement}
     </InputContainer>

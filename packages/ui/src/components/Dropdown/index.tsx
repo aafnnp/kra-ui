@@ -1,4 +1,4 @@
-import React, {useState, useRef, useCallback, useEffect} from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -13,11 +13,110 @@ import Animated, {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
-import {useTheme} from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import { useTheme } from '@shopify/restyle';
+import type { Theme } from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
-import type {BoxProps} from '../Box';
+import type { BoxProps } from '../Box';
+
+function DefaultTrigger({ trigger, isOpen }: { trigger: string; isOpen: boolean }) {
+  return (
+    <Box
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="space-between"
+      paddingVertical="s"
+      paddingHorizontal="m"
+      borderWidth={1}
+      borderColor="border"
+      borderRadius="m"
+      backgroundColor="inputBackground"
+    >
+      <Text color="textPrimary">{trigger}</Text>
+      <Text
+        fontSize={10}
+        color="textSecondary"
+        style={{ transform: [{ rotate: isOpen ? '180deg' : '0deg' }] }}
+      >
+        ▼
+      </Text>
+    </Box>
+  );
+}
+
+function DropdownMenu({
+  isOpen,
+  items,
+  theme,
+  menuTop,
+  menuLeft,
+  menuWidth,
+  menuAnimatedStyle,
+  onClose,
+  onLayout,
+  onSelect,
+}: {
+  isOpen: boolean;
+  items: DropdownItem[];
+  theme: Theme;
+  menuTop: number;
+  menuLeft: number;
+  menuWidth: number;
+  menuAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
+  onClose: () => void;
+  onLayout: (e: LayoutChangeEvent) => void;
+  onSelect: (key: string) => void;
+}) {
+  return (
+    <RNModal
+      visible={isOpen}
+      transparent
+      animationType="none"
+      onRequestClose={onClose}
+      statusBarTranslucent
+    >
+      <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+
+      <Animated.View
+        onLayout={onLayout}
+        style={[
+          styles.menu,
+          {
+            top: menuTop,
+            left: menuLeft,
+            width: menuWidth,
+            backgroundColor: theme.colors.cardBackground,
+            borderColor: theme.colors.border,
+            shadowColor: theme.colors.textPrimary as string,
+          },
+          menuAnimatedStyle,
+        ]}
+      >
+        {items.map((item) => (
+          <React.Fragment key={item.key}>
+            {item.divider ? <Box height={1} backgroundColor="border" /> : null}
+            <Pressable
+              onPress={() => !item.disabled && onSelect(item.key)}
+              disabled={item.disabled}
+              accessibilityRole="menuitem"
+              accessibilityState={{ disabled: item.disabled }}
+              style={({ pressed }) => ({
+                paddingVertical: 8,
+                paddingHorizontal: 16,
+                opacity: item.disabled ? 0.4 : 1,
+                backgroundColor: pressed ? (theme.colors.primaryLight as string) : 'transparent',
+              })}
+            >
+              <Text fontSize={15} color={item.disabled ? 'textMuted' : 'textPrimary'}>
+                {item.label}
+              </Text>
+            </Pressable>
+          </React.Fragment>
+        ))}
+      </Animated.View>
+    </RNModal>
+  );
+}
 
 export interface DropdownItem {
   /** 唯一标识 */
@@ -59,11 +158,11 @@ function Dropdown({
   ...rest
 }: DropdownProps) {
   const theme = useTheme<Theme>();
-  const {height: screenHeight} = useWindowDimensions();
+  const { height: screenHeight } = useWindowDimensions();
   const [isOpen, setIsOpen] = useState(false);
   const scaleAnim = useSharedValue(0);
   const opacityAnim = useSharedValue(0);
-  const triggerRef = useRef<{x: number; y: number; width: number; height: number}>({
+  const triggerRef = useRef<{ x: number; y: number; width: number; height: number }>({
     x: 0,
     y: 0,
     width: 0,
@@ -72,20 +171,18 @@ function Dropdown({
 
   const menuAnimatedStyle = useAnimatedStyle(() => ({
     opacity: opacityAnim.value,
-    transform: [
-      {scale: 0.85 + 0.15 * scaleAnim.value},
-    ],
+    transform: [{ scale: 0.85 + 0.15 * scaleAnim.value }],
   }));
 
   const animateIn = useCallback(() => {
-    scaleAnim.value = withSpring(1, {stiffness: 100, damping: 12});
-    opacityAnim.value = withTiming(1, {duration: 150});
+    scaleAnim.value = withSpring(1, { stiffness: 100, damping: 12 });
+    opacityAnim.value = withTiming(1, { duration: 150 });
   }, [scaleAnim, opacityAnim]);
 
   const animateOut = useCallback(
     (callback?: () => void) => {
-      scaleAnim.value = withTiming(0, {duration: 150});
-      opacityAnim.value = withTiming(0, {duration: 150}, finished => {
+      scaleAnim.value = withTiming(0, { duration: 150 });
+      opacityAnim.value = withTiming(0, { duration: 150 }, (finished) => {
         if (finished && callback) {
           runOnJS(callback)();
         }
@@ -118,14 +215,15 @@ function Dropdown({
     }
   }, [isOpen, animateIn]);
 
-  const triggerViewRef = useRef<any>(null);
+  type TriggerRef = React.ElementRef<typeof Pressable>;
+  const triggerViewRef = useRef<TriggerRef | null>(null);
   const [menuHeight, setMenuHeight] = useState(0);
 
   const handleTriggerLayout = useCallback(() => {
     if (triggerViewRef.current) {
       triggerViewRef.current.measureInWindow(
         (x: number, y: number, width: number, height: number) => {
-          triggerRef.current = {x, y, width, height};
+          triggerRef.current = { x, y, width, height };
         },
       );
     }
@@ -135,18 +233,13 @@ function Dropdown({
     setMenuHeight(e.nativeEvent.layout.height);
   }, []);
 
-  const {y, height: triggerHeight, x, width: triggerWidth} = triggerRef.current;
+  const { y, height: triggerHeight, x, width: triggerWidth } = triggerRef.current;
   const menuTopWhenDown = y + triggerHeight + 4;
-  const menuLeft =
-    align === 'right'
-      ? x + triggerWidth - (menuWidth || triggerWidth)
-      : x;
+  const menuLeft = align === 'right' ? x + triggerWidth - (menuWidth || triggerWidth) : x;
 
   const estimatedMenuHeight = menuHeight || 200;
   const openDownward = menuTopWhenDown + estimatedMenuHeight < screenHeight;
-  const menuTop = openDownward
-    ? menuTopWhenDown
-    : Math.max(0, y - estimatedMenuHeight - 4);
+  const menuTop = openDownward ? menuTopWhenDown : Math.max(0, y - estimatedMenuHeight - 4);
 
   return (
     <Box {...rest}>
@@ -156,97 +249,41 @@ function Dropdown({
         onLayout={handleTriggerLayout}
         testID="native-ui-dropdown-trigger"
         accessibilityRole="button"
-        accessibilityState={{expanded: isOpen}}>
+        accessibilityState={{ expanded: isOpen }}
+      >
         {renderTrigger ? (
           renderTrigger(isOpen)
         ) : (
-          <Box
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-            paddingVertical="s"
-            paddingHorizontal="m"
-            borderWidth={1}
-            borderColor="border"
-            borderRadius="m"
-            backgroundColor="inputBackground">
-            <Text color="textPrimary">{trigger}</Text>
-            <Text
-              fontSize={10}
-              color="textSecondary"
-              style={{
-                transform: [{rotate: isOpen ? '180deg' : '0deg'}],
-              }}>
-              ▼
-            </Text>
-          </Box>
+          <DefaultTrigger trigger={trigger} isOpen={isOpen} />
         )}
       </Pressable>
 
-      <RNModal
-        visible={isOpen}
-        transparent
-        animationType="none"
-        onRequestClose={handleClose}
-        statusBarTranslucent>
-        <Pressable style={StyleSheet.absoluteFill} onPress={handleClose} />
-
-        <Animated.View
-          onLayout={handleMenuLayout}
-          style={[
-            styles.menu,
-            {
-              top: menuTop,
-              left: menuLeft,
-              width: menuWidth || triggerWidth,
-              backgroundColor: theme.colors.cardBackground,
-              borderColor: theme.colors.border,
-              shadowColor: theme.colors.textPrimary as string,
-            },
-            menuAnimatedStyle,
-          ]}>
-          {items.map(item => (
-            <React.Fragment key={item.key}>
-              {item.divider && (
-                <Box height={1} backgroundColor="border" />
-              )}
-              <Pressable
-                onPress={() => !item.disabled && handleSelect(item.key)}
-                disabled={item.disabled}
-                accessibilityRole="menuitem"
-                accessibilityState={{disabled: item.disabled}}
-                style={({pressed}) => ({
-                  paddingVertical: 8,
-                  paddingHorizontal: 16,
-                  opacity: item.disabled ? 0.4 : 1,
-                  backgroundColor: pressed
-                    ? (theme.colors.primaryLight as string)
-                    : 'transparent',
-                })}>
-                <Text
-                  fontSize={15}
-                  color={item.disabled ? 'textMuted' : 'textPrimary'}>
-                  {item.label}
-                </Text>
-              </Pressable>
-            </React.Fragment>
-          ))}
-        </Animated.View>
-      </RNModal>
+      <DropdownMenu
+        isOpen={isOpen}
+        items={items}
+        theme={theme}
+        menuTop={menuTop}
+        menuLeft={menuLeft}
+        menuWidth={menuWidth || triggerWidth}
+        menuAnimatedStyle={menuAnimatedStyle}
+        onClose={handleClose}
+        onLayout={handleMenuLayout}
+        onSelect={handleSelect}
+      />
     </Box>
   );
 }
 
 const styles = StyleSheet.create({
   menu: {
-    position: 'absolute',
     borderRadius: 12,
     borderWidth: 1,
+    elevation: 8,
     overflow: 'hidden',
-    shadowOffset: {width: 0, height: 4},
+    position: 'absolute',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.12,
     shadowRadius: 12,
-    elevation: 8,
   },
 });
 

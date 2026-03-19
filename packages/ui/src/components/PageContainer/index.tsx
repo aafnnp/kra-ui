@@ -243,23 +243,23 @@ function PageContainer({
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   flex1: {
     flex: 1,
   },
-  scrollView: {
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+  safeArea: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
   },
-  loadingOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
+  scrollView: {
+    flex: 1,
   },
 });
 

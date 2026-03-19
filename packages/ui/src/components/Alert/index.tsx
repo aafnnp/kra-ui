@@ -1,14 +1,10 @@
-import React, {createContext, useContext, useMemo} from 'react';
-import {
-  createRestyleComponent,
-  createVariant,
-  type VariantProps,
-} from '@shopify/restyle';
-import {Pressable} from 'react-native';
-import type {Theme} from '../../theme';
+import React, { createContext, useContext, useMemo } from 'react';
+import { createRestyleComponent, createVariant, type VariantProps } from '@shopify/restyle';
+import { Pressable } from 'react-native';
+import type { Theme } from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
-import type {BoxProps} from '../Box';
+import type { BoxProps } from '../Box';
 import {
   InfoIcon,
   CheckCircleIcon,
@@ -20,7 +16,7 @@ import {
 const AlertContainer = createRestyleComponent<
   VariantProps<Theme, 'alertVariants'> & React.ComponentProps<typeof Box>,
   Theme
->([createVariant({themeKey: 'alertVariants'})], Box);
+>([createVariant({ themeKey: 'alertVariants' })], Box);
 
 type AlertVariant = 'info' | 'success' | 'warning' | 'error';
 type AlertSize = 'sm' | 'md';
@@ -28,6 +24,20 @@ type AlertSize = 'sm' | 'md';
 type AlertIconRender = boolean | React.ReactNode;
 
 type TextVariant = Exclude<keyof Theme['textVariants'], 'defaults'>;
+
+function resolveIconColorKey(variant: AlertVariant): keyof Theme['colors'] {
+  switch (variant) {
+    case 'success':
+      return 'success';
+    case 'warning':
+      return 'warning';
+    case 'error':
+      return 'error';
+    case 'info':
+    default:
+      return 'primary';
+  }
+}
 
 export interface AlertProps extends BoxProps {
   /** 提示类型 */
@@ -87,7 +97,15 @@ function useAlertContext() {
   return ctx;
 }
 
-function DefaultIcon({variant, size, colorKey}: {variant: AlertVariant; size: number; colorKey: keyof Theme['colors']}) {
+function DefaultIcon({
+  variant,
+  size,
+  colorKey,
+}: {
+  variant: AlertVariant;
+  size: number;
+  colorKey: keyof Theme['colors'];
+}) {
   switch (variant) {
     case 'success':
       return <CheckCircleIcon size={size} color={colorKey} />;
@@ -101,12 +119,141 @@ function DefaultIcon({variant, size, colorKey}: {variant: AlertVariant; size: nu
   }
 }
 
+function AlertIconSlot({
+  icon,
+  variant,
+  size,
+  colorKey,
+}: {
+  icon: AlertIconRender;
+  variant: AlertVariant;
+  size: number;
+  colorKey: keyof Theme['colors'];
+}) {
+  if (!icon) return null;
+  return (
+    <Box>
+      {typeof icon === 'boolean' ? (
+        <DefaultIcon variant={variant} size={size} colorKey={colorKey} />
+      ) : (
+        icon
+      )}
+    </Box>
+  );
+}
+
+function AlertTextSlot({
+  title,
+  message,
+  titleTextVariant,
+  messageTextVariant,
+  colorKey,
+}: {
+  title?: React.ReactNode;
+  message?: React.ReactNode;
+  titleTextVariant: TextVariant;
+  messageTextVariant: TextVariant;
+  colorKey: keyof Theme['colors'];
+}) {
+  if (!title && !message) return null;
+  return (
+    <Box flex={1}>
+      {title ? (
+        <Text variant={titleTextVariant} fontWeight="600" color={colorKey}>
+          {title}
+        </Text>
+      ) : null}
+      {message ? (
+        <Text variant={messageTextVariant} color={colorKey} marginTop={title ? 'xs' : undefined}>
+          {message}
+        </Text>
+      ) : null}
+    </Box>
+  );
+}
+
+function AlertActionSlot({ action }: { action?: React.ReactNode }) {
+  if (!action) return null;
+  return <Box>{action}</Box>;
+}
+
+function AlertCloseSlot({
+  closable,
+  onClose,
+  iconSize,
+  colorKey,
+}: {
+  closable: boolean;
+  onClose?: () => void;
+  iconSize: number;
+  colorKey: keyof Theme['colors'];
+}) {
+  if (!closable) return null;
+  return (
+    <Pressable onPress={onClose} accessibilityLabel="关闭提示" hitSlop={8}>
+      <CloseIcon size={iconSize} color={colorKey} />
+    </Pressable>
+  );
+}
+
+function AlertDefaultLayout({
+  resolvedVariant,
+  icon,
+  title,
+  resolvedMessage,
+  action,
+  closable,
+  onClose,
+  sizeToken,
+  iconColor,
+}: {
+  resolvedVariant: AlertVariant;
+  icon: AlertIconRender;
+  title?: React.ReactNode;
+  resolvedMessage?: React.ReactNode;
+  action?: React.ReactNode;
+  closable: boolean;
+  onClose?: () => void;
+  sizeToken: {
+    gap: keyof Theme['spacing'];
+    iconSize: number;
+    titleTextVariant: TextVariant;
+    messageTextVariant: TextVariant;
+  };
+  iconColor: keyof Theme['colors'];
+}) {
+  return (
+    <Box flex={1} flexDirection="row" alignItems="center" gap={sizeToken.gap}>
+      <AlertIconSlot
+        icon={icon}
+        variant={resolvedVariant}
+        size={sizeToken.iconSize}
+        colorKey={iconColor}
+      />
+      <AlertTextSlot
+        title={title}
+        message={resolvedMessage}
+        titleTextVariant={sizeToken.titleTextVariant}
+        messageTextVariant={sizeToken.messageTextVariant}
+        colorKey={iconColor}
+      />
+      <AlertActionSlot action={action} />
+      <AlertCloseSlot
+        closable={closable}
+        onClose={onClose}
+        iconSize={sizeToken.iconSize}
+        colorKey={iconColor}
+      />
+    </Box>
+  );
+}
+
 /**
  * 提示信息组件
  * 支持 variant: info, success, warning, error
  * 支持插槽：Alert.Icon / Alert.Title / Alert.Description / Alert.Action / Alert.Close
  */
-function Alert({
+function AlertBase({
   variant,
   status,
   size = 'md',
@@ -123,19 +270,7 @@ function Alert({
   const resolvedVariant: AlertVariant = (variant ?? status ?? 'info') as AlertVariant;
   const resolvedMessage = message ?? description;
 
-  const iconColor: keyof Theme['colors'] = useMemo(() => {
-    switch (resolvedVariant) {
-      case 'success':
-        return 'success';
-      case 'warning':
-        return 'warning';
-      case 'error':
-        return 'error';
-      case 'info':
-      default:
-        return 'primary';
-    }
-  }, [resolvedVariant]);
+  const iconColor = resolveIconColorKey(resolvedVariant);
 
   const sizeToken = useMemo(() => {
     // Theme 在运行时由 Restyle Provider 注入，这里通过 Box/Text 的 token 使用即可；
@@ -179,128 +314,68 @@ function Alert({
         {...rest}
         accessibilityRole="alert"
       >
-        {children ? (
-          children
-        ) : (
-          <Box
-            flex={1}
-            flexDirection="row"
-            alignItems="center"
-            gap={sizeToken.gap}
-          >
-            {icon ? (
-              <Box>
-                {typeof icon === 'boolean' ? (
-                  <DefaultIcon
-                    variant={resolvedVariant}
-                    size={sizeToken.iconSize}
-                    colorKey={iconColor}
-                  />
-                ) : (
-                  icon
-                )}
-              </Box>
-            ) : null}
-
-            <Box flex={1}>
-              {title ? (
-                <Text
-                  variant={sizeToken.titleTextVariant}
-                  fontWeight="600"
-                  color={iconColor}
-                >
-                  {title}
-                </Text>
-              ) : null}
-
-              {resolvedMessage ? (
-                <Text
-                  variant={sizeToken.messageTextVariant}
-                  color={iconColor}
-                  marginTop={title ? 'xs' : undefined}
-                >
-                  {resolvedMessage}
-                </Text>
-              ) : null}
-            </Box>
-
-            {action ? <Box>{action}</Box> : null}
-
-            {closable ? (
-              <Pressable
-                onPress={onClose}
-                accessibilityLabel="关闭提示"
-                hitSlop={8}
-              >
-                <CloseIcon size={sizeToken.iconSize} color={iconColor} />
-              </Pressable>
-            ) : null}
-          </Box>
+        {children ?? (
+          <AlertDefaultLayout
+            resolvedVariant={resolvedVariant}
+            icon={icon}
+            title={title}
+            resolvedMessage={resolvedMessage}
+            action={action}
+            closable={closable}
+            onClose={onClose}
+            sizeToken={sizeToken}
+            iconColor={iconColor}
+          />
         )}
       </AlertContainer>
     </AlertContext.Provider>
   );
 }
 
-function AlertIcon({children}: {children?: React.ReactNode}) {
-  const {variant, iconColor, iconSize} = useAlertContext();
+function Alert(props: AlertProps) {
+  return <AlertBase {...props} />;
+}
+
+function AlertIcon({ children }: { children?: React.ReactNode }) {
+  const { variant, iconColor, iconSize } = useAlertContext();
   if (children === null) return null;
   return (
     <Box>
-      {children ? (
-        children
-      ) : (
-        <DefaultIcon
-          variant={variant}
-          size={iconSize}
-          colorKey={iconColor}
-        />
-      )}
+      {children ? children : <DefaultIcon variant={variant} size={iconSize} colorKey={iconColor} />}
     </Box>
   );
 }
 
-function AlertTitle({children}: {children?: React.ReactNode}) {
-  const {titleTextVariant, titleColor} = useAlertContext();
+function AlertTitle({ children }: { children?: React.ReactNode }) {
+  const { titleTextVariant, titleColor } = useAlertContext();
   if (!children) return null;
   return (
-    <Text
-      variant={titleTextVariant}
-      fontWeight="600"
-      color={titleColor}
-    >
+    <Text variant={titleTextVariant} fontWeight="600" color={titleColor}>
       {children}
     </Text>
   );
 }
 
-function AlertDescription({children}: {children?: React.ReactNode}) {
-  const {messageTextVariant, messageColor} = useAlertContext();
+function AlertDescription({ children }: { children?: React.ReactNode }) {
+  const { messageTextVariant, messageColor } = useAlertContext();
   if (!children) return null;
   return (
-    <Text
-      variant={messageTextVariant}
-      color={messageColor}
-    >
+    <Text variant={messageTextVariant} color={messageColor}>
       {children}
     </Text>
   );
 }
 
-function AlertAction({children}: {children?: React.ReactNode}) {
+function AlertAction({ children }: { children?: React.ReactNode }) {
   if (!children) return null;
   return <Box>{children}</Box>;
 }
 
 function AlertClose() {
-  const {closable, onClose, iconColor, iconSize} = useAlertContext();
+  const { closable, onClose, iconColor, iconSize } = useAlertContext();
   if (!closable) return null;
   return (
-    <Pressable
-      onPress={onClose}
-      accessibilityLabel="关闭提示"
-      hitSlop={8}
-    >
+    <Pressable onPress={onClose} accessibilityLabel="关闭提示" hitSlop={8}>
       <CloseIcon size={iconSize} color={iconColor} />
     </Pressable>
   );

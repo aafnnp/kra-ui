@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
 import { Pressable } from 'react-native';
-import { useTheme } from '@shopify/restyle';
 import type { Theme } from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
@@ -16,11 +15,16 @@ type StepOrientation = 'horizontal' | 'vertical';
 /** 步骤尺寸 */
 type StepSize = 'sm' | 'md' | 'lg';
 
+type ColorKey = Extract<keyof Theme['colors'], string>;
+
 /** 尺寸配置映射 */
-const SIZE_CONFIG: Record<StepSize, {circle: number; fontSize: number; titleSize: number; descSize: number}> = {
-  sm: {circle: 24, fontSize: 12, titleSize: 12, descSize: 10},
-  md: {circle: 32, fontSize: 14, titleSize: 14, descSize: 12},
-  lg: {circle: 40, fontSize: 18, titleSize: 16, descSize: 14},
+const SIZE_CONFIG: Record<
+  StepSize,
+  { circle: number; fontSize: number; titleSize: number; descSize: number }
+> = {
+  sm: { circle: 24, fontSize: 12, titleSize: 12, descSize: 10 },
+  md: { circle: 32, fontSize: 14, titleSize: 14, descSize: 12 },
+  lg: { circle: 40, fontSize: 18, titleSize: 16, descSize: 14 },
 };
 
 /**
@@ -77,37 +81,40 @@ function StepIndicator({
   size: StepSize;
   icon?: React.ReactNode;
 }) {
-  const theme = useTheme<Theme>();
   const config = SIZE_CONFIG[size];
 
-  const {bgColor, borderColor, contentColor} = useMemo(() => {
+  const { bgColor, borderColor, contentColor } = useMemo((): {
+    bgColor: ColorKey;
+    borderColor: ColorKey;
+    contentColor: ColorKey;
+  } => {
     switch (status) {
       case 'finish':
         return {
-          bgColor: theme.colors.primary,
-          borderColor: theme.colors.primary,
-          contentColor: theme.colors.textInverse,
+          bgColor: 'primary',
+          borderColor: 'primary',
+          contentColor: 'textInverse',
         };
       case 'process':
         return {
-          bgColor: theme.colors.primary,
-          borderColor: theme.colors.primary,
-          contentColor: theme.colors.textInverse,
+          bgColor: 'primary',
+          borderColor: 'primary',
+          contentColor: 'textInverse',
         };
       case 'error':
         return {
-          bgColor: theme.colors.transparent,
-          borderColor: theme.colors.error,
-          contentColor: theme.colors.error,
+          bgColor: 'transparent',
+          borderColor: 'error',
+          contentColor: 'error',
         };
       default:
         return {
-          bgColor: theme.colors.transparent,
-          borderColor: theme.colors.border,
-          contentColor: theme.colors.textMuted,
+          bgColor: 'transparent',
+          borderColor: 'border',
+          contentColor: 'textMuted',
         };
     }
-  }, [status, theme]);
+  }, [status]);
 
   return (
     <Box
@@ -117,17 +124,17 @@ function StepIndicator({
       borderWidth={2}
       alignItems="center"
       justifyContent="center"
-      style={{backgroundColor: bgColor, borderColor}}
+      backgroundColor={bgColor}
+      borderColor={borderColor}
     >
-      {icon ?? (
-        status === 'finish' ? (
+      {icon ??
+        (status === 'finish' ? (
           <CheckIcon size={config.fontSize} color="textInverse" />
         ) : (
-          <Text style={{fontSize: config.fontSize, color: contentColor, fontWeight: '600'}}>
+          <Text fontSize={config.fontSize} color={contentColor} fontWeight="600">
             {String(index + 1)}
           </Text>
-        )
-      )}
+        ))}
     </Box>
   );
 }
@@ -144,11 +151,7 @@ function StepConnector({
 
   if (orientation === 'horizontal') {
     return (
-      <Box
-        height={2}
-        marginHorizontal="xs"
-        backgroundColor={isFinish ? 'primary' : 'border'}
-      />
+      <Box height={2} marginHorizontal="xs" backgroundColor={isFinish ? 'primary' : 'border'} />
     );
   }
 
@@ -207,11 +210,7 @@ function Steps({
               onPress={handlePress}
             />
             {index < resolvedItems.length - 1 && (
-              <Box
-                flex={1}
-                justifyContent="center"
-                style={{height: SIZE_CONFIG[size].circle}}
-              >
+              <Box flex={1} justifyContent="center" height={SIZE_CONFIG[size].circle}>
                 <StepConnector
                   status={item.resolvedStatus === 'finish' ? 'finish' : 'pending'}
                   orientation="horizontal"
@@ -267,10 +266,8 @@ function HorizontalStep({
       <StepIndicator index={index} status={status} size={size} icon={item.icon} />
       <Text
         marginTop="xs"
-        style={{
-          fontSize: config.titleSize,
-          fontWeight: isActive ? '600' : '400',
-        }}
+        fontSize={config.titleSize}
+        fontWeight={isActive ? '600' : '400'}
         color={status === 'error' ? 'error' : isActive ? 'textPrimary' : 'textMuted'}
         textAlign="center"
       >
@@ -279,7 +276,7 @@ function HorizontalStep({
       {item.description && (
         <Text
           marginTop="xs"
-          style={{fontSize: config.descSize}}
+          fontSize={config.descSize}
           color={status === 'error' ? 'error' : 'textSecondary'}
           textAlign="center"
         >
@@ -322,10 +319,42 @@ function VerticalStep({
   onPress: (index: number) => void;
   isLast: boolean;
 }) {
+  if (!isClickable) {
+    return (
+      <VerticalStepRow index={index} item={item} status={status} size={size} isLast={isLast} />
+    );
+  }
+
+  return (
+    <Pressable
+      onPress={() => onPress(index)}
+      accessibilityRole="button"
+      accessibilityLabel={`步骤 ${index + 1}: ${item.title}`}
+    >
+      <VerticalStepRow index={index} item={item} status={status} size={size} isLast={isLast} />
+    </Pressable>
+  );
+}
+
+function VerticalStepRow({
+  index,
+  item,
+  status,
+  size,
+  isLast,
+}: {
+  index: number;
+  item: StepItem;
+  status: StepStatus;
+  size: StepSize;
+  isLast: boolean;
+}) {
   const config = SIZE_CONFIG[size];
   const isActive = status === 'process' || status === 'finish';
+  const titleColor = status === 'error' ? 'error' : isActive ? 'textPrimary' : 'textMuted';
+  const descColor = status === 'error' ? 'error' : 'textSecondary';
 
-  const stepRow = (
+  return (
     <Box flexDirection="row" alignItems="flex-start">
       <Box alignItems="center">
         <StepIndicator index={index} status={status} size={size} icon={item.icon} />
@@ -338,41 +367,21 @@ function VerticalStep({
       </Box>
       <Box flex={1} marginLeft="s" paddingBottom={isLast ? '0' : 'l'}>
         <Text
-          style={{
-            fontSize: config.titleSize,
-            fontWeight: isActive ? '600' : '400',
-            lineHeight: config.circle,
-          }}
-          color={status === 'error' ? 'error' : isActive ? 'textPrimary' : 'textMuted'}
+          fontSize={config.titleSize}
+          fontWeight={isActive ? '600' : '400'}
+          lineHeight={config.circle}
+          color={titleColor}
         >
           {item.title}
         </Text>
-        {item.description && (
-          <Text
-            marginTop="xs"
-            style={{fontSize: config.descSize}}
-            color={status === 'error' ? 'error' : 'textSecondary'}
-          >
+        {item.description ? (
+          <Text marginTop="xs" fontSize={config.descSize} color={descColor}>
             {item.description}
           </Text>
-        )}
+        ) : null}
       </Box>
     </Box>
   );
-
-  if (isClickable) {
-    return (
-      <Pressable
-        onPress={() => onPress(index)}
-        accessibilityRole="button"
-        accessibilityLabel={`步骤 ${index + 1}: ${item.title}`}
-      >
-        {stepRow}
-      </Pressable>
-    );
-  }
-
-  return stepRow;
 }
 
 export default Steps;

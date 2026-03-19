@@ -11,7 +11,12 @@ jest.mock('react-native-reanimated', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const AnimatedView = React.forwardRef((props: any, ref: any) =>
+  // jest 的 mock 工厂会被提升，这里避免引用“非 mock 前缀”的外部标识符
+  type mockUnknownProps = Record<string, unknown>;
+  type mockUnknownRef = unknown;
+  type mockUnknownFn = (...args: unknown[]) => unknown;
+
+  const AnimatedView = React.forwardRef((props: mockUnknownProps, ref: mockUnknownRef) =>
     React.createElement(View, { ...props, ref }),
   );
   AnimatedView.displayName = 'Animated.View';
@@ -24,15 +29,15 @@ jest.mock('react-native-reanimated', () => {
     FadeIn: {
       duration: () => ({}),
     },
-    useSharedValue: (value: any) => ({ value }),
-    useAnimatedStyle: (updater: any) => updater(),
-    withSpring: (toValue: any) => toValue,
-    withTiming: (toValue: any, _config?: any, callback?: (finished: boolean) => void) => {
+    useSharedValue: (value: unknown) => ({ value }),
+    useAnimatedStyle: (updater: mockUnknownFn) => updater(),
+    withSpring: (toValue: unknown) => toValue,
+    withTiming: (toValue: unknown, _config?: unknown, callback?: (finished: boolean) => void) => {
       if (callback) {
         callback(true);
       }
       return toValue;
     },
-    runOnJS: (fn: any) => fn,
+    runOnJS: (fn: mockUnknownFn) => fn,
   };
 });

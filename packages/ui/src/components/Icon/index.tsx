@@ -1,8 +1,8 @@
-import React, {useMemo} from 'react';
-import {useTheme} from '@shopify/restyle';
-import Svg, {Path, G, Circle, Line, Polyline, Rect, Polygon} from 'react-native-svg';
-import type {SvgProps} from 'react-native-svg';
-import type {Theme} from '../../theme';
+import React, { useMemo } from 'react';
+import { useTheme } from '@shopify/restyle';
+import Svg, { Path, G, Circle, Line, Polyline, Rect, Polygon } from 'react-native-svg';
+import type { SvgProps } from 'react-native-svg';
+import type { Theme } from '../../theme';
 
 /** 预设尺寸映射 */
 const sizeMap = {
@@ -82,7 +82,8 @@ function Icon({
       strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
-      accessibilityLabel={accessibilityLabel}>
+      accessibilityLabel={accessibilityLabel}
+    >
       {children}
     </Svg>
   );
@@ -130,8 +131,8 @@ function createIcon(options: CreateIconOptions): React.FC<IconProps> {
     render,
   } = options;
 
-  const IconComponent: React.FC<IconProps> = props => {
-    const merged = {...defaultProps, ...props};
+  const IconComponent: React.FC<IconProps> = (props) => {
+    const merged = { ...defaultProps, ...props };
     const theme = useTheme<Theme>();
     const resolvedColor = theme.colors[merged.color ?? 'textPrimary'] as string;
 
@@ -143,12 +144,10 @@ function createIcon(options: CreateIconOptions): React.FC<IconProps> {
         return <Path d={d} />;
       }
       if (paths) {
-        return paths.map((p, i) => (
-          <Path key={i} d={p.d} fill={p.fill} stroke={p.stroke} />
-        ));
+        return paths.map((p, i) => <Path key={i} d={p.d} fill={p.fill} stroke={p.stroke} />);
       }
       return null;
-    }, [resolvedColor, render]);
+    }, [resolvedColor]);
 
     return (
       <Icon viewBox={viewBox} {...merged}>
@@ -161,5 +160,5 @@ function createIcon(options: CreateIconOptions): React.FC<IconProps> {
   return IconComponent;
 }
 
-export {createIcon, Path, G, Circle, Line, Polyline, Rect, Polygon};
+export { createIcon, Path, G, Circle, Line, Polyline, Rect, Polygon };
 export default Icon;

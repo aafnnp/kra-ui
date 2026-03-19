@@ -82,16 +82,32 @@ function Textarea({
   const fontSize = sizeTokens?.fontSize ?? 16;
   const lineHeight = Math.round(fontSize * 1.5);
   const minHeight = lineHeight * rows + theme.spacing.m;
+  const containerStyle = useMemo(
+    () => ({
+      minHeight,
+      borderColor: stateTokens?.borderColor,
+      backgroundColor: stateTokens?.backgroundColor,
+    }),
+    [minHeight, stateTokens?.backgroundColor, stateTokens?.borderColor],
+  );
+  const inputStyle = useMemo(
+    () => ({
+      flex: 1,
+      fontSize,
+      lineHeight,
+      color: stateTokens?.textColor
+        ? theme.colors[stateTokens.textColor]
+        : theme.colors.textPrimary,
+      paddingVertical: theme.spacing.s,
+    }),
+    [fontSize, lineHeight, stateTokens?.textColor, theme.colors, theme.spacing.s],
+  );
 
   return (
     <TextareaContainer
       variant={variant}
       opacity={isDisabled ? 0.5 : 1}
-      style={{
-        minHeight,
-        borderColor: stateTokens?.borderColor,
-        backgroundColor: stateTokens?.backgroundColor,
-      }}
+      style={containerStyle}
       {...rest}
     >
       <TextInput
@@ -114,15 +130,7 @@ function Textarea({
           setIsFocused(false);
           onBlur?.(e);
         }}
-        style={{
-          flex: 1,
-          fontSize,
-          lineHeight,
-          color: stateTokens?.textColor
-            ? theme.colors[stateTokens.textColor]
-            : theme.colors.textPrimary,
-          paddingVertical: theme.spacing.s,
-        }}
+        style={inputStyle}
       />
     </TextareaContainer>
   );

@@ -1,10 +1,11 @@
-import React, {useState, useCallback} from 'react';
-import {Image, Pressable, View, type ImageSourcePropType} from 'react-native';
-import {useTheme} from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import { useCallback, useMemo, useState } from 'react';
+import { Image, Pressable, type ImageSourcePropType, type ImageStyle } from 'react-native';
+import { useTheme } from '@shopify/restyle';
+import type { Theme } from '../../theme';
+import Box from '../Box';
 import Center from '../Center';
 import Text from '../Text';
-import type {BoxProps} from '../Box';
+import type { BoxProps } from '../Box';
 
 const STATUS_LABELS: Record<string, string> = {
   online: '在线',
@@ -22,6 +23,55 @@ function getInitials(name?: string): string {
     return (parts[0][0] + parts[1][0]).toUpperCase().slice(0, 2);
   }
   return trimmed.slice(0, 2);
+}
+
+function resolveAvatarSizes(theme: Theme, size: AvatarProps['size']) {
+  const fallback = {
+    dimension: 48,
+    fontSize: 18,
+    statusSize: 10,
+  };
+  const config = (size ? theme.avatarSizes?.[size] : undefined) ?? fallback;
+  const dimension = typeof config.dimension === 'number' ? config.dimension : fallback.dimension;
+  const fontSize = typeof config.fontSize === 'number' ? config.fontSize : fallback.fontSize;
+  const statusSize =
+    typeof config.statusSize === 'number' ? config.statusSize : fallback.statusSize;
+  return { dimension, fontSize, statusSize };
+}
+
+function getA11yProps(onPress: AvatarProps['onPress'], label: string) {
+  return onPress ? {} : { accessibilityRole: 'image' as const, accessibilityLabel: label };
+}
+
+function StatusBadge({
+  status,
+  statusSize,
+}: {
+  status: NonNullable<AvatarProps['status']>;
+  statusSize: number;
+}) {
+  const theme = useTheme<Theme>();
+  const backgroundColorKey = (theme.avatarStatusColors?.[status] ??
+    'success') as keyof Theme['colors'];
+  const borderColorKey = (
+    theme.colors.mainBackground ? 'mainBackground' : 'cardBackground'
+  ) as keyof Theme['colors'];
+
+  return (
+    <Box
+      position="absolute"
+      bottom={0}
+      right={0}
+      width={statusSize}
+      height={statusSize}
+      backgroundColor={backgroundColorKey}
+      borderWidth={1}
+      borderColor={borderColorKey}
+      style={{ borderRadius: statusSize / 2 }}
+      accessibilityLabel={STATUS_LABELS[status] ?? status}
+      accessible
+    />
+  );
 }
 
 export interface AvatarProps extends BoxProps {
@@ -59,15 +109,10 @@ function Avatar({
   const theme = useTheme<Theme>();
   const [hasImageError, setHasImageError] = useState(false);
 
-  const sizes = theme.avatarSizes?.[size] ?? {
-    dimension: 48,
-    fontSize: 18,
-    statusSize: 10,
-  };
-  const dimension = typeof sizes.dimension === 'number' ? sizes.dimension : 48;
-  const fontSize = typeof sizes.fontSize === 'number' ? sizes.fontSize : 18;
-  const statusSize =
-    typeof sizes.statusSize === 'number' ? sizes.statusSize : 10;
+  const { dimension, fontSize, statusSize } = useMemo(
+    () => resolveAvatarSizes(theme, size),
+    [size, theme],
+  );
 
   const showImage = Boolean(source) && !hasImageError;
   const initials = getInitials(name);
@@ -81,10 +126,12 @@ function Avatar({
     [onImageError],
   );
 
-  const a11yProps =
-    !onPress
-      ? {accessibilityRole: 'image' as const, accessibilityLabel: label}
-      : {};
+  const a11yProps = getA11yProps(onPress, label);
+
+  const imageStyle: ImageStyle = useMemo(
+    () => ({ width: dimension, height: dimension }),
+    [dimension],
+  );
 
   const content = (
     <Center
@@ -94,44 +141,16 @@ function Avatar({
       backgroundColor="primaryLight"
       overflow="hidden"
       {...a11yProps}
-      {...rest}>
+      {...rest}
+    >
       {showImage ? (
-        <Image
-          source={source!}
-          style={{width: dimension, height: dimension}}
-          resizeMode="cover"
-          onError={handleImageError}
-        />
+        <Image source={source!} style={imageStyle} resizeMode="cover" onError={handleImageError} />
       ) : (
-        <Text
-          style={{
-            fontSize,
-            fontWeight: '600',
-            color: theme.colors.primary,
-          }}>
+        <Text fontSize={fontSize} fontWeight="600" color="primary">
           {initials}
         </Text>
       )}
-      {status && (
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            right: 0,
-            width: statusSize,
-            height: statusSize,
-            borderRadius: statusSize / 2,
-            backgroundColor:
-              theme.colors[
-                (theme.avatarStatusColors?.[status] ?? 'success') as keyof Theme['colors']
-              ],
-            borderWidth: 1,
-            borderColor: theme.colors.mainBackground ?? theme.colors.cardBackground,
-          }}
-          accessibilityLabel={STATUS_LABELS[status] ?? status}
-          accessible
-        />
-      )}
+      {status ? <StatusBadge status={status} statusSize={statusSize} /> : null}
     </Center>
   );
 
@@ -142,7 +161,8 @@ function Avatar({
         disabled={isDisabled}
         accessibilityRole="imagebutton"
         accessibilityLabel={label}
-        accessibilityState={{disabled: isDisabled}}>
+        accessibilityState={{ disabled: isDisabled }}
+      >
         {content}
       </Pressable>
     );

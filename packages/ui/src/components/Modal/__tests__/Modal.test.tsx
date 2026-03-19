@@ -1,7 +1,8 @@
 import React from 'react';
-import { fireEvent } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 import Modal from '../index';
 import { darkTheme, theme } from '../../../theme';
+import { NativeUIProvider } from '../../../provider/NativeUIProvider';
 import { renderWithProvider } from '../../../test-utils/render';
 
 const renderWithProviderWithColorMode = (
@@ -9,8 +10,6 @@ const renderWithProviderWithColorMode = (
   { initialColorMode = 'light' }: { initialColorMode?: 'light' | 'dark' } = {},
 ) => {
   // 颜色模式相关测试仍沿用按需自定义 Provider，避免侵入 renderWithProvider 的默认行为
-  const { NativeUIProvider } = require('../../../provider/NativeUIProvider');
-  const { render } = require('@testing-library/react-native');
   return render(<NativeUIProvider initialColorMode={initialColorMode}>{ui}</NativeUIProvider>);
 };
 

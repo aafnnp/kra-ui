@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useMemo, useRef, useCallback } from 'react';
 import {
   Modal as RNModal,
   Pressable,
@@ -139,6 +139,24 @@ function Popup({
   ).current;
 
   const panelHeight = typeof height === 'number' ? screenHeight * height : undefined;
+  const overlayBgStyle = useMemo(
+    () => ({ backgroundColor: theme.colors.overlay }),
+    [theme.colors.overlay],
+  );
+  const panelDynamicStyle = useMemo(
+    () => ({
+      maxHeight: screenHeight * 0.9,
+      backgroundColor: theme.colors.cardBackground,
+      height: panelHeight,
+      borderTopLeftRadius: rounded ? theme.borderRadii.xl : 0,
+      borderTopRightRadius: rounded ? theme.borderRadii.xl : 0,
+    }),
+    [panelHeight, rounded, screenHeight, theme.borderRadii.xl, theme.colors.cardBackground],
+  );
+  const handleBgStyle = useMemo(
+    () => ({ backgroundColor: theme.colors.border }),
+    [theme.colors.border],
+  );
 
   return (
     <RNModal
@@ -148,9 +166,7 @@ function Popup({
       onRequestClose={handleClose}
       statusBarTranslucent
     >
-      <Animated.View
-        style={[styles.overlay, { backgroundColor: theme.colors.overlay }, overlayStyle]}
-      >
+      <Animated.View style={[styles.overlay, overlayBgStyle, overlayStyle]}>
         <Pressable
           style={StyleSheet.absoluteFill}
           onPress={closeOnOverlay ? handleClose : undefined}
@@ -158,21 +174,10 @@ function Popup({
       </Animated.View>
 
       <Animated.View style={[styles.container, containerStyle]} {...panResponder.panHandlers}>
-        <Box
-          style={[
-            styles.panel,
-            {
-              maxHeight: screenHeight * 0.9,
-              backgroundColor: theme.colors.cardBackground,
-              height: panelHeight,
-              borderTopLeftRadius: rounded ? theme.borderRadii.xl : 0,
-              borderTopRightRadius: rounded ? theme.borderRadii.xl : 0,
-            },
-          ]}
-        >
+        <Box style={[styles.panel, panelDynamicStyle]}>
           {showHandle && (
             <Box alignItems="center" paddingTop="s" paddingBottom="xs">
-              <Box style={[styles.handle, { backgroundColor: theme.colors.border }]} />
+              <Box style={[styles.handle, handleBgStyle]} />
             </Box>
           )}
 
@@ -212,21 +217,21 @@ function Popup({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+  },
+  handle: {
+    borderRadius: 2,
+    height: 4,
+    width: 36,
+  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
   },
-  container: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
   panel: {},
-  handle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-  },
 });
 
 export default Popup;

@@ -1,12 +1,12 @@
-import React from 'react';
-import {View} from 'react-native';
-import {useTheme} from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import React, { useMemo } from 'react';
+import { View } from 'react-native';
+import { useTheme } from '@shopify/restyle';
+import type { Theme } from '../../theme';
 import Avatar from '../Avatar';
 import Center from '../Center';
 import Text from '../Text';
 import Flex from '../Flex';
-import type {BoxProps} from '../Box';
+import type { BoxProps } from '../Box';
 
 export interface AvatarGroupProps extends BoxProps {
   /** 统一子头像尺寸 */
@@ -38,9 +38,34 @@ function AvatarGroup({
   const ringWidth = typeof sizes.ringWidth === 'number' ? sizes.ringWidth : 2;
   const gap = typeof sizes.gap === 'number' ? sizes.gap : 8;
   const overlap = spacing === 'tight' ? ringWidth + 2 : ringWidth + gap / 2;
+  const borderColor = theme.colors.mainBackground ?? theme.colors.cardBackground;
+  const extraFontSize = (sizes as { fontSize?: number }).fontSize ?? 18;
 
-  const childArray = React.Children.toArray(children).filter(
-    (c): c is React.ReactElement => React.isValidElement(c),
+  const commonWrapperStyle = useMemo(
+    () => ({
+      borderWidth: ringWidth,
+      borderColor,
+      borderRadius: dimension / 2 + ringWidth,
+    }),
+    [borderColor, dimension, ringWidth],
+  );
+  const firstWrapperStyle = useMemo(
+    () => ({
+      ...commonWrapperStyle,
+      marginLeft: 0,
+    }),
+    [commonWrapperStyle],
+  );
+  const overlappedWrapperStyle = useMemo(
+    () => ({
+      ...commonWrapperStyle,
+      marginLeft: -overlap,
+    }),
+    [commonWrapperStyle, overlap],
+  );
+
+  const childArray = React.Children.toArray(children).filter((c): c is React.ReactElement =>
+    React.isValidElement(c),
   );
   const visible = childArray.slice(0, max);
   const extra = Math.max(0, childArray.length - max);
@@ -48,42 +73,23 @@ function AvatarGroup({
   return (
     <Flex flexDirection="row" alignItems="center" {...rest}>
       {visible.map((child, i) => (
-        <View
-          key={i}
-          style={{
-            marginLeft: i === 0 ? 0 : -overlap,
-            borderWidth: ringWidth,
-            borderColor: theme.colors.mainBackground ?? theme.colors.cardBackground,
-            borderRadius: dimension / 2 + ringWidth,
-          }}>
+        <View key={i} style={i === 0 ? firstWrapperStyle : overlappedWrapperStyle}>
           {React.isValidElement(child) && child.type === Avatar
-            ? React.cloneElement(child as React.ReactElement<{size?: string}>, {
+            ? React.cloneElement(child as React.ReactElement<{ size?: string }>, {
                 size,
               })
             : child}
         </View>
       ))}
       {extra > 0 && (
-        <View
-          style={{
-            marginLeft: -overlap,
-            borderWidth: ringWidth,
-            borderColor: theme.colors.mainBackground ?? theme.colors.cardBackground,
-            borderRadius: dimension / 2 + ringWidth,
-          }}
-          accessibilityLabel={`还有 ${extra} 个头像`}
-          accessible>
+        <View style={overlappedWrapperStyle} accessibilityLabel={`还有 ${extra} 个头像`} accessible>
           <Center
             width={dimension}
             height={dimension}
             borderRadius="full"
-            backgroundColor="primaryLight">
-            <Text
-              style={{
-                fontSize: (sizes as {fontSize?: number}).fontSize ?? 18,
-                fontWeight: '600',
-                color: theme.colors.primary,
-              }}>
+            backgroundColor="primaryLight"
+          >
+            <Text fontSize={extraFontSize} fontWeight="600" color="primary">
               +{extra}
             </Text>
           </Center>

@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react';
+import { useMemo, useRef, useCallback } from 'react';
 import { TextInput, Pressable } from 'react-native';
 import { useTheme } from '@shopify/restyle';
 import type { Theme } from '../../theme';
@@ -45,6 +45,17 @@ function PinInput({
   const theme = useTheme<Theme>();
   const s = sizeMap[size];
   const inputRefs = useRef<(TextInput | null)[]>([]);
+  const inputStyle = useMemo(
+    () => ({
+      fontSize: s.fontSize,
+      color: theme.colors.textPrimary,
+      textAlign: 'center' as const,
+      width: '100%' as const,
+      height: '100%' as const,
+      padding: 0,
+    }),
+    [s.fontSize, theme.colors.textPrimary],
+  );
 
   const chars = value.split('').slice(0, length);
   while (chars.length < length) {
@@ -94,17 +105,15 @@ function PinInput({
       {chars.map((char, index) => (
         <Pressable key={index} onPress={() => focusInput(index)}>
           <Box
-            style={{
-              width: s.box,
-              height: s.box,
-              borderWidth: 2,
-              borderColor: char ? theme.colors.borderFocus : theme.colors.border,
-              borderRadius: 8,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginRight: index < length - 1 ? 8 : 0,
-              opacity: isDisabled ? 0.5 : 1,
-            }}
+            width={s.box}
+            height={s.box}
+            borderWidth={2}
+            borderColor={char ? 'borderFocus' : 'border'}
+            borderRadius="m"
+            alignItems="center"
+            justifyContent="center"
+            marginRight={index < length - 1 ? 's' : undefined}
+            opacity={isDisabled ? 0.5 : 1}
           >
             <TextInput
               ref={(ref) => {
@@ -117,14 +126,7 @@ function PinInput({
               maxLength={2}
               editable={!isDisabled}
               selectTextOnFocus
-              style={{
-                fontSize: s.fontSize,
-                color: theme.colors.textPrimary,
-                textAlign: 'center',
-                width: '100%',
-                height: '100%',
-                padding: 0,
-              }}
+              style={inputStyle}
             />
           </Box>
         </Pressable>

@@ -1,10 +1,9 @@
-import React from 'react';
-import {Pressable} from 'react-native';
-import {useTheme} from '@shopify/restyle';
-import type {Theme} from '../../theme';
+import { Pressable, StyleSheet } from 'react-native';
+import { useTheme } from '@shopify/restyle';
+import type { Theme } from '../../theme';
 import Box from '../Box';
 import Text from '../Text';
-import type {BoxProps} from '../Box';
+import type { BoxProps } from '../Box';
 
 const sizeMap = {
   sm: 16,
@@ -37,12 +36,12 @@ function Rating({
   readonly = false,
   ...rest
 }: RatingProps) {
-  const theme = useTheme<Theme>();
+  useTheme<Theme>();
   const fontSize = sizeMap[size];
 
   return (
     <Box flexDirection="row" alignItems="center" {...rest}>
-      {Array.from({length: count}, (_, index) => {
+      {Array.from({ length: count }, (_, index) => {
         const starIndex = index + 1;
         const isActive = starIndex <= value;
 
@@ -52,15 +51,13 @@ function Rating({
             onPress={() => !readonly && onChange?.(starIndex)}
             disabled={readonly}
             accessibilityRole="button"
-            accessibilityLabel={`${starIndex} 星`}>
+            accessibilityLabel={`${starIndex} 星`}
+          >
             <Text
-              style={{
-                fontSize,
-                color: isActive
-                  ? theme.colors.ratingActive
-                  : theme.colors.ratingInactive,
-                marginRight: 2,
-              }}>
+              fontSize={fontSize}
+              color={isActive ? 'ratingActive' : 'ratingInactive'}
+              style={styles.star}
+            >
               ★
             </Text>
           </Pressable>
@@ -69,5 +66,11 @@ function Rating({
     </Box>
   );
 }
+
+const styles = StyleSheet.create({
+  star: {
+    marginRight: 2,
+  },
+});
 
 export default Rating;

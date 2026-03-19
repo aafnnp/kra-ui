@@ -61,7 +61,8 @@ function Button({
   const sizeStyle = theme.buttonSizes[size];
 
   const isOutlineOrGhost = variant === 'outline' || variant === 'ghost';
-  const textColor = isOutlineOrGhost ? theme.colors.primary : theme.colors.textInverse;
+  const textColorKey = isOutlineOrGhost ? 'primary' : 'textInverse';
+  const textColor = theme.colors[textColorKey];
 
   const normalized = normalizeInteractiveState({ isDisabled, isLoading });
 
@@ -88,7 +89,7 @@ function Button({
             <ActivityIndicator size="small" color={textColor} />
           </Box>
         )}
-        <Text style={{ color: textColor, fontSize: sizeStyle.fontSize, fontWeight: '600' }}>
+        <Text color={textColorKey} fontSize={sizeStyle.fontSize} fontWeight="600">
           {label}
         </Text>
       </ButtonContainer>

@@ -1,8 +1,8 @@
-import React, {Children} from 'react';
+import React, { Children, useMemo } from 'react';
 import Box from '../Box';
 import Text from '../Text';
-import type {BoxProps} from '../Box';
-import type {Theme} from '../../theme';
+import type { BoxProps } from '../Box';
+import type { Theme } from '../../theme';
 
 export interface ListItemProps extends BoxProps {
   /** 列表项内容 */
@@ -12,7 +12,7 @@ export interface ListItemProps extends BoxProps {
 /**
  * 列表项组件
  */
-function ListItem({children, ...rest}: ListItemProps) {
+function ListItem({ children, ...rest }: ListItemProps) {
   return (
     <Box flexDirection="row" alignItems="flex-start" {...rest}>
       {children}
@@ -31,13 +31,10 @@ export interface ListProps extends BoxProps {
  * 列表组件
  * 支持有序列表（数字）和无序列表（圆点）
  */
-function List({
-  type = 'unordered',
-  spacing = 'xs',
-  children,
-  ...rest
-}: ListProps) {
+function List({ type = 'unordered', spacing = 'xs', children, ...rest }: ListProps) {
   const validChildren = Children.toArray(children).filter(Boolean);
+  const markerWidth = type === 'ordered' ? 24 : 16;
+  const markerStyle = useMemo(() => ({ width: markerWidth }), [markerWidth]);
 
   return (
     <Box {...rest}>
@@ -46,11 +43,9 @@ function List({
           key={index}
           flexDirection="row"
           alignItems="flex-start"
-          marginTop={index > 0 ? spacing : undefined}>
-          <Text
-            color="textSecondary"
-            style={{width: type === 'ordered' ? 24 : 16}}
-            fontSize={14}>
+          marginTop={index > 0 ? spacing : undefined}
+        >
+          <Text color="textSecondary" style={markerStyle} fontSize={14}>
             {type === 'ordered' ? `${index + 1}.` : '•'}
           </Text>
           <Box flex={1}>{child}</Box>
@@ -60,5 +55,5 @@ function List({
   );
 }
 
-export {ListItem};
+export { ListItem };
 export default List;
