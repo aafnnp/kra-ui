@@ -23,13 +23,6 @@ const statusIconMap: Record<ToastStatus, React.FC<IconProps>> = {
   error: XCircleIcon,
 };
 
-const statusColorMap: Record<ToastStatus, keyof Theme['colors']> = {
-  info: 'primary',
-  success: 'success',
-  warning: 'warning',
-  error: 'error',
-};
-
 export interface ToastProps {
   /** 是否显示 */
   visible: boolean;
@@ -143,7 +136,17 @@ function Toast({
     return null;
   }
 
-  const colorKey = statusColorMap[status];
+  const variantTokens = (theme as any).toastVariants?.[status] as
+    | {
+        accentColor: keyof Theme['colors'];
+        backgroundColor: keyof Theme['colors'];
+        textColor: keyof Theme['colors'];
+      }
+    | undefined;
+  const accentColorKey = variantTokens?.accentColor ?? 'primary';
+  const backgroundColorKey = variantTokens?.backgroundColor ?? 'cardBackground';
+  const textColorKey = variantTokens?.textColor ?? 'textPrimary';
+
   const StatusIcon = statusIconMap[status];
   const shouldRenderAction = Boolean(actionLabel && onActionPress);
 
@@ -158,23 +161,26 @@ function Toast({
       pointerEvents="box-none">
       <Pressable
         onPress={closable ? handleClose : undefined}
+        testID="native-ui-toast"
+        accessibilityRole="alert"
+        accessibilityLabel={title ? `${title} ${message}` : message}
         style={[
           styles.toast,
           {
             width: screenWidth - 32,
-            backgroundColor: theme.colors.cardBackground,
-            borderLeftColor: theme.colors[colorKey] as string,
+            backgroundColor: theme.colors[backgroundColorKey] as string,
+            borderLeftColor: theme.colors[accentColorKey] as string,
             shadowColor: theme.colors.textPrimary as string,
           },
         ]}>
-        <StatusIcon size={18} color={colorKey} />
+        <StatusIcon size={18} color={accentColorKey} />
         <Pressable style={styles.content} pointerEvents="none">
           {title ? (
-            <Text style={styles.title} numberOfLines={1} color="textPrimary">
+            <Text style={styles.title} numberOfLines={1} color={textColorKey}>
               {title}
             </Text>
           ) : null}
-          <Text style={styles.message} numberOfLines={title ? 1 : 2} color="textPrimary">
+          <Text style={styles.message} numberOfLines={title ? 1 : 2} color={textColorKey}>
             {message}
           </Text>
         </Pressable>

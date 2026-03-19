@@ -81,7 +81,10 @@ function Modal({
         animationType={animationType}
         onRequestClose={onClose}
         statusBarTranslucent>
-        <Pressable style={styles.overlay} onPress={handleOverlayPress}>
+        <Pressable
+          testID="native-ui-modal-overlay"
+          style={[styles.overlay, {backgroundColor: theme.colors.overlay}]}
+          onPress={handleOverlayPress}>
           <Pressable
             style={[
               styles.content,
@@ -192,7 +195,6 @@ Modal.Footer = ModalFooter;
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'center',
     alignItems: 'center',
   },

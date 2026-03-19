@@ -66,6 +66,11 @@ const [visible, setVisible] = useState(false);
 | placement | `'top' \| 'bottom'`                           | `'top'`  | 显示位置                           |
 | closable  | `boolean`                                     | `true`   | 是否可手动关闭                     |
 
+## 可访问性
+
+- 默认 `accessibilityRole="alert"`
+- 默认 `accessibilityLabel`：优先使用 `title + message`，否则使用 `message`
+
 ## 动画效果
 
 - **滑入动画**：从顶部/底部弹簧式滑入

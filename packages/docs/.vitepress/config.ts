@@ -15,6 +15,7 @@ export default defineConfig({
         items: [
           { text: "快速开始", link: "/guide/getting-started" },
           { text: "主题配置", link: "/guide/theme" },
+          { text: "迁移指南", link: "/guide/migration" },
         ],
       },
       {

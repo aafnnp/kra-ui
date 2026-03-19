@@ -152,6 +152,31 @@ const theme = createTheme({
     },
   },
 
+  // 按钮尺寸（统一交互组件尺寸令牌）
+  buttonSizes: {
+    sm: {
+      paddingX: 's',
+      paddingY: 'xs',
+      fontSize: 14,
+      gap: 'xs',
+      spinnerSize: 14,
+    },
+    md: {
+      paddingX: 'm',
+      paddingY: 's',
+      fontSize: 16,
+      gap: 's',
+      spinnerSize: 16,
+    },
+    lg: {
+      paddingX: 'l',
+      paddingY: 'm',
+      fontSize: 18,
+      gap: 's',
+      spinnerSize: 18,
+    },
+  },
+
   // 卡片变体
   cardVariants: {
     defaults: {
@@ -217,6 +242,83 @@ const theme = createTheme({
       borderColor: 'border',
       borderRadius: 'none',
       paddingHorizontal: '0',
+    },
+  },
+
+  // 输入类组件尺寸
+  inputSizes: {
+    sm: {
+      height: 36,
+      paddingX: 's',
+      paddingY: 'xs',
+      fontSize: 14,
+      radius: 'm',
+    },
+    md: {
+      height: 44,
+      paddingX: 'm',
+      paddingY: 's',
+      fontSize: 16,
+      radius: 'm',
+    },
+    lg: {
+      height: 52,
+      paddingX: 'l',
+      paddingY: 'm',
+      fontSize: 18,
+      radius: 'l',
+    },
+  },
+
+  // 输入类组件状态色（default/focus/invalid/disabled）
+  inputStates: {
+    default: {
+      borderColor: 'border',
+      backgroundColor: 'inputBackground',
+      textColor: 'textPrimary',
+      iconColor: 'textSecondary',
+    },
+    focus: {
+      borderColor: 'borderFocus',
+      backgroundColor: 'inputBackground',
+      textColor: 'textPrimary',
+      iconColor: 'textSecondary',
+    },
+    invalid: {
+      borderColor: 'error',
+      backgroundColor: 'inputBackground',
+      textColor: 'textPrimary',
+      iconColor: 'error',
+    },
+    disabled: {
+      borderColor: 'border',
+      backgroundColor: 'codeBackground',
+      textColor: 'textMuted',
+      iconColor: 'textMuted',
+    },
+  },
+
+  // Toast 变体（v1）
+  toastVariants: {
+    info: {
+      accentColor: 'primary',
+      textColor: 'textPrimary',
+      backgroundColor: 'cardBackground',
+    },
+    success: {
+      accentColor: 'success',
+      textColor: 'textPrimary',
+      backgroundColor: 'cardBackground',
+    },
+    warning: {
+      accentColor: 'warning',
+      textColor: 'textPrimary',
+      backgroundColor: 'cardBackground',
+    },
+    error: {
+      accentColor: 'error',
+      textColor: 'textPrimary',
+      backgroundColor: 'cardBackground',
     },
   },
 
