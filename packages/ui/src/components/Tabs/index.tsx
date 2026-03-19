@@ -154,6 +154,7 @@ function Tabs({
           key={item.key}
           onPress={() => handleTabPress(item.key)}
           onLayout={e => handleTabLayout(item.key, e)}
+          testID={`native-ui-tabs-tab-${item.key}`}
           accessibilityRole="tab"
           accessibilityState={{selected: isActive}}>
           <Box

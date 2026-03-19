@@ -11,8 +11,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
-  useDerivedValue,
-  Easing,
   type EasingFunction,
 } from 'react-native-reanimated';
 import { useTheme } from '@shopify/restyle';
@@ -24,7 +22,7 @@ import { ChevronDownIcon } from '../Icon/icons';
 
 /** 动画时长（毫秒） */
 const DEFAULT_ANIMATION_DURATION = 250;
-const DEFAULT_EASING = Easing.bezier(0.4, 0, 0.2, 1);
+const DEFAULT_EASING: EasingFunction = (t) => t;
 
 /** 手风琴展开模式 */
 type AccordionType = 'single' | 'multiple';
@@ -250,15 +248,19 @@ function AccordionItem({ title, isDisabled = false, renderHeader, children, ...r
   const isExpanded = expandedIndices.has(index);
 
   const contentHeight = useSharedValue(0);
+  const expandedProgress = useSharedValue(isExpanded ? 1 : 0);
   const timingConfig = useMemo(
     () => ({ duration: animationDuration, easing: resolveEasing(animationEasing) }),
     [animationDuration, animationEasing],
   );
 
-  const animatedExpanded = useDerivedValue(() => {
-    if (!isAnimated) return isExpanded ? 1 : 0;
-    return withTiming(isExpanded ? 1 : 0, timingConfig);
-  });
+  useEffect(() => {
+    if (!isAnimated) {
+      expandedProgress.value = isExpanded ? 1 : 0;
+      return;
+    }
+    expandedProgress.value = withTiming(isExpanded ? 1 : 0, timingConfig);
+  }, [expandedProgress, isAnimated, isExpanded, timingConfig]);
 
   const handlePress = useCallback(() => {
     if (!isDisabled) {
@@ -275,14 +277,14 @@ function AccordionItem({ title, isDisabled = false, renderHeader, children, ...r
 
   /** 内容区高度 + 透明度动画 */
   const contentAnimatedStyle = useAnimatedStyle(() => ({
-    height: animatedExpanded.value * contentHeight.value,
-    opacity: animatedExpanded.value,
+    height: expandedProgress.value * contentHeight.value,
+    opacity: expandedProgress.value,
     overflow: 'hidden' as const,
   }));
 
   /** 箭头旋转动画 */
   const arrowAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${animatedExpanded.value * 180}deg` }],
+    transform: [{ rotate: `${expandedProgress.value * 180}deg` }],
   }));
 
   const itemStyle: BoxProps =
@@ -321,6 +323,7 @@ function AccordionItem({ title, isDisabled = false, renderHeader, children, ...r
         <Pressable
           onPress={handlePress}
           disabled={isDisabled}
+          testID={`native-ui-accordion-header-${index}`}
           accessibilityRole="button"
           accessibilityState={{ expanded: isExpanded, disabled: isDisabled }}
         >

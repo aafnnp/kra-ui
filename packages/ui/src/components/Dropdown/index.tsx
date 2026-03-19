@@ -11,7 +11,6 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
-  interpolate,
   runOnJS,
 } from 'react-native-reanimated';
 import {useTheme} from '@shopify/restyle';
@@ -74,7 +73,7 @@ function Dropdown({
   const menuAnimatedStyle = useAnimatedStyle(() => ({
     opacity: opacityAnim.value,
     transform: [
-      {scale: interpolate(scaleAnim.value, [0, 1], [0.85, 1])},
+      {scale: 0.85 + 0.15 * scaleAnim.value},
     ],
   }));
 
@@ -155,6 +154,7 @@ function Dropdown({
         ref={triggerViewRef}
         onPress={handleOpen}
         onLayout={handleTriggerLayout}
+        testID="native-ui-dropdown-trigger"
         accessibilityRole="button"
         accessibilityState={{expanded: isOpen}}>
         {renderTrigger ? (
