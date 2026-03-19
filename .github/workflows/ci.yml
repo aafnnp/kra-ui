@@ -35,6 +35,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # format:check 需要对比 base sha（push 的 before / PR 的 base sha），浅克隆会导致 git diff 找不到对象而失败
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
 
