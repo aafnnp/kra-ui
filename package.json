@@ -10,7 +10,7 @@
     "lint:eslint": "eslint \"packages/**/*.{ts,tsx,js,jsx}\"",
     "format": "prettier \"**/*.{js,jsx,ts,tsx,json,md,mdx,yml,yaml}\" --write",
     "format:check": "node ./scripts/prettier-check-changed.mjs",
-    "typecheck": "pnpm --filter kra-ui lint && pnpm --filter kra-ui-example exec tsc --noEmit",
+    "typecheck": "pnpm --filter kra-ui lint && pnpm --filter kra-ui-example typecheck",
     "test": "pnpm --filter kra-ui test -- --ci --runInBand --watchman=false",
     "ci": "pnpm format:check && pnpm lint:eslint && pnpm typecheck && pnpm test && pnpm build",
     "clean": "pnpm -r clean",
