@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {TextInput, type TextInputProps} from 'react-native';
 import {
   createRestyleComponent,
@@ -12,6 +12,7 @@ import {
 import type {Theme} from '../../theme';
 import Box from '../Box';
 import type {BoxProps} from '../Box';
+import {getAccessibilityLabel} from '../_shared/a11y';
 
 type TextareaContainerProps = VariantProps<Theme, 'inputVariants'> &
   React.ComponentProps<typeof Box>;
@@ -21,17 +22,11 @@ const TextareaContainer = createRestyleComponent<TextareaContainerProps, Theme>(
   Box,
 );
 
-const sizeMap = {
-  sm: {fontSize: 14, lineHeight: 20},
-  md: {fontSize: 16, lineHeight: 24},
-  lg: {fontSize: 18, lineHeight: 28},
-};
-
 export interface TextareaProps extends BoxProps, Omit<TextInputProps, 'style'> {
   /** 变体 */
   variant?: 'outline' | 'filled' | 'underline';
   /** 尺寸 */
-  size?: keyof typeof sizeMap;
+  size?: 'sm' | 'md' | 'lg';
   /** 行数，默认 3 */
   rows?: number;
   /** 是否无效 */
@@ -59,8 +54,28 @@ function Textarea({
 }: TextareaProps) {
   const theme = useTheme<Theme>();
   const [isFocused, setIsFocused] = useState(false);
-  const s = sizeMap[size];
-  const minHeight = s.lineHeight * rows + 16;
+  const a11yLabel = useMemo(
+    () =>
+      getAccessibilityLabel({
+        label: placeholder,
+        accessibilityLabel: rest.accessibilityLabel,
+      }),
+    [placeholder, rest.accessibilityLabel],
+  );
+
+  const stateKey = isDisabled ? 'disabled' : isInvalid ? 'invalid' : isFocused ? 'focus' : 'default';
+  const stateTokens = theme.inputStates?.[stateKey] as
+    | {
+        borderColor?: keyof Theme['colors'];
+        backgroundColor?: keyof Theme['colors'];
+        textColor?: keyof Theme['colors'];
+      }
+    | undefined;
+
+  const sizeTokens = theme.inputSizes?.[size];
+  const fontSize = sizeTokens?.fontSize ?? 16;
+  const lineHeight = Math.round(fontSize * 1.5);
+  const minHeight = lineHeight * rows + theme.spacing.m;
 
   return (
     <TextareaContainer
@@ -68,11 +83,8 @@ function Textarea({
       opacity={isDisabled ? 0.5 : 1}
       style={{
         minHeight,
-        borderColor: isInvalid
-          ? theme.colors.error
-          : isFocused
-            ? theme.colors.borderFocus
-            : undefined,
+        borderColor: stateTokens?.borderColor,
+        backgroundColor: stateTokens?.backgroundColor,
       }}
       {...rest}>
       <TextInput
@@ -84,6 +96,8 @@ function Textarea({
         placeholderTextColor={theme.colors.textMuted}
         value={value}
         onChangeText={onChangeText}
+        accessibilityLabel={a11yLabel}
+        accessibilityState={{invalid: isInvalid, disabled: isDisabled}}
         onFocus={e => {
           setIsFocused(true);
           onFocus?.(e);
@@ -94,10 +108,10 @@ function Textarea({
         }}
         style={{
           flex: 1,
-          fontSize: s.fontSize,
-          lineHeight: s.lineHeight,
-          color: theme.colors.textPrimary,
-          paddingVertical: 8,
+          fontSize,
+          lineHeight,
+          color: stateTokens?.textColor ? theme.colors[stateTokens.textColor] : theme.colors.textPrimary,
+          paddingVertical: theme.spacing.s,
         }}
       />
     </TextareaContainer>

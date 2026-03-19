@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {TextInput, type TextInputProps} from 'react-native';
 import {
   createRestyleComponent,
@@ -12,6 +12,7 @@ import {
 import type {Theme} from '../../theme';
 import Box from '../Box';
 import type {BoxProps} from '../Box';
+import {getAccessibilityLabel} from '../_shared/a11y';
 
 type InputContainerProps = VariantProps<Theme, 'inputVariants'> &
   React.ComponentProps<typeof Box>;
@@ -21,17 +22,11 @@ const InputContainer = createRestyleComponent<InputContainerProps, Theme>(
   Box,
 );
 
-const sizeMap = {
-  sm: {height: 36, fontSize: 14},
-  md: {height: 44, fontSize: 16},
-  lg: {height: 52, fontSize: 18},
-};
-
 export interface InputProps extends BoxProps, Omit<TextInputProps, 'style'> {
   /** 变体 */
   variant?: 'outline' | 'filled' | 'underline';
   /** 尺寸 */
-  size?: keyof typeof sizeMap;
+  size?: 'sm' | 'md' | 'lg';
   /** 左侧元素 */
   leftElement?: React.ReactNode;
   /** 右侧元素 */
@@ -63,7 +58,26 @@ function Input({
 }: InputProps) {
   const theme = useTheme<Theme>();
   const [isFocused, setIsFocused] = useState(false);
-  const sizeStyle = sizeMap[size];
+
+  const a11yLabel = useMemo(
+    () =>
+      getAccessibilityLabel({
+        label: placeholder,
+        accessibilityLabel: rest.accessibilityLabel,
+      }),
+    [placeholder, rest.accessibilityLabel],
+  );
+
+  const stateKey = isDisabled ? 'disabled' : isInvalid ? 'invalid' : isFocused ? 'focus' : 'default';
+  const stateTokens = theme.inputStates?.[stateKey] as
+    | {
+        borderColor?: keyof Theme['colors'];
+        backgroundColor?: keyof Theme['colors'];
+        textColor?: keyof Theme['colors'];
+        iconColor?: keyof Theme['colors'];
+      }
+    | undefined;
+  const sizeTokens = theme.inputSizes?.[size];
 
   return (
     <InputContainer
@@ -72,12 +86,9 @@ function Input({
       alignItems="center"
       opacity={isDisabled ? 0.5 : 1}
       style={{
-        height: sizeStyle.height,
-        borderColor: isInvalid
-          ? theme.colors.error
-          : isFocused
-            ? theme.colors.borderFocus
-            : undefined,
+        height: sizeTokens?.height,
+        borderColor: stateTokens?.borderColor,
+        backgroundColor: stateTokens?.backgroundColor,
       }}
       {...rest}>
       {leftElement}
@@ -87,6 +98,8 @@ function Input({
         placeholderTextColor={theme.colors.textMuted}
         value={value}
         onChangeText={onChangeText}
+        accessibilityLabel={a11yLabel}
+        accessibilityState={{invalid: isInvalid, disabled: isDisabled}}
         onFocus={e => {
           setIsFocused(true);
           onFocus?.(e);
@@ -97,8 +110,8 @@ function Input({
         }}
         style={{
           flex: 1,
-          fontSize: sizeStyle.fontSize,
-          color: theme.colors.textPrimary,
+          fontSize: sizeTokens?.fontSize ?? 16,
+          color: stateTokens?.textColor ? theme.colors[stateTokens.textColor] : theme.colors.textPrimary,
           paddingVertical: 0,
         }}
       />
