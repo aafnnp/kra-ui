@@ -34,9 +34,7 @@ test('isInvalid 与 isDisabled 会反映到无障碍 state', () => {
   const { getByPlaceholderText: getByPlaceholderTextInvalid } = renderWithProvider(
     <Textarea placeholder="无效" isInvalid />,
   );
-  expect(getByPlaceholderTextInvalid('无效').props.accessibilityState).toMatchObject({
-    invalid: true,
-  });
+  expect(getByPlaceholderTextInvalid('无效').props.accessibilityHint).toBe('输入无效');
 
   const { getByPlaceholderText: getByPlaceholderTextDisabled } = renderWithProvider(
     <Textarea placeholder="禁用" isDisabled />,

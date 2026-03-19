@@ -17,7 +17,6 @@ test('优先使用新规范字段（isLoading/isDisabled/isInvalid）', () => {
   expect(result.accessibilityState).toMatchObject({
     disabled: true,
     busy: true,
-    invalid: true,
   });
 });
 
@@ -35,7 +34,6 @@ test('兼容旧字段（loading/disabled/invalid）', () => {
   expect(result.accessibilityState).toMatchObject({
     disabled: true,
     busy: true,
-    invalid: true,
   });
 });
 

@@ -17,7 +17,7 @@ import { Input } from 'kra-ui';
 <Input placeholder="禁用" isDisabled />
 ```
 
-> 可访问性：当传入 `isInvalid/isDisabled` 时，会自动同步到 `accessibilityState.invalid/disabled`；默认使用 `placeholder` 作为 `accessibilityLabel`（可手动覆盖）。
+> 可访问性：当传入 `isDisabled` 时，会自动同步到 `accessibilityState.disabled`；当传入 `isInvalid` 时，会设置 `accessibilityHint`（默认“输入无效”）。同时默认使用 `placeholder` 作为 `accessibilityLabel`（可手动覆盖）。
 
 ## Props
 

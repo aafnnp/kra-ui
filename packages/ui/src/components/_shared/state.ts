@@ -45,7 +45,6 @@ export function normalizeInteractiveState(
     ...(input.accessibilityState ?? {}),
     disabled: isPressableDisabled || (input.accessibilityState?.disabled ?? false),
     busy: isLoading || (input.accessibilityState?.busy ?? false),
-    invalid: isInvalid || (input.accessibilityState?.invalid ?? false),
   };
 
   return {

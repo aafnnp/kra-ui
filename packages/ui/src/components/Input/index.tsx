@@ -99,7 +99,8 @@ function Input({
         value={value}
         onChangeText={onChangeText}
         accessibilityLabel={a11yLabel}
-        accessibilityState={{invalid: isInvalid, disabled: isDisabled}}
+        accessibilityState={{disabled: isDisabled}}
+        accessibilityHint={isInvalid ? '输入无效' : undefined}
         onFocus={e => {
           setIsFocused(true);
           onFocus?.(e);

@@ -29,10 +29,11 @@ Button 默认会设置：
 
 ### a11y state（无需改动）
 
-当你传入 `isInvalid/isDisabled` 时，组件会自动同步到：
+当你传入 `isDisabled` 时，组件会自动同步到：
 
-- `accessibilityState.invalid`
 - `accessibilityState.disabled`
+
+当你传入 `isInvalid` 时，组件会设置 `accessibilityHint`（默认“输入无效”）。
 
 并默认使用 `placeholder` 作为 `accessibilityLabel`（可手动覆盖）。
 
