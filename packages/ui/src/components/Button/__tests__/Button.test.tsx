@@ -42,3 +42,23 @@ test('loading 或 isDisabled 时不触发 onPress', () => {
 
   expect(onPress).not.toHaveBeenCalled();
 });
+
+test('默认包含无障碍 role，并在 loading/disabled 时设置 state', () => {
+  const { getByLabelText: getByLabelTextNormal } = renderWithProvider(<Button label="正常" />);
+  expect(getByLabelTextNormal('正常').props.accessibilityRole).toBe('button');
+
+  const { getByLabelText: getByLabelTextLoading } = renderWithProvider(
+    <Button label="加载" isLoading />,
+  );
+  expect(getByLabelTextLoading('加载').props.accessibilityState).toMatchObject({
+    busy: true,
+    disabled: true,
+  });
+
+  const { getByLabelText: getByLabelTextDisabled } = renderWithProvider(
+    <Button label="禁用" isDisabled />,
+  );
+  expect(getByLabelTextDisabled('禁用').props.accessibilityState).toMatchObject({
+    disabled: true,
+  });
+});
