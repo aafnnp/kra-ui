@@ -46,8 +46,16 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm lint
+      - name: Format
+        env:
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: pnpm format:check -- --base "$BASE_SHA"
+
+      - name: Lint (ESLint)
+        run: pnpm lint:eslint
+
+      - name: Type check
+        run: pnpm typecheck
 
       - name: Test
         run: pnpm --filter kra-ui test -- --ci --runInBand --watchman=false
@@ -56,9 +64,4 @@ jobs:
         run: pnpm build
 
       - name: Example type check
-        run: |
-          if node -e "const pkg=require('./packages/example/package.json');process.exit(pkg.scripts&&pkg.scripts.lint?0:1)"; then
-            pnpm --filter kra-ui-example lint
-          else
-            pnpm --filter kra-ui-example exec tsc --noEmit
-          fi
+        run: pnpm --filter kra-ui-example typecheck
