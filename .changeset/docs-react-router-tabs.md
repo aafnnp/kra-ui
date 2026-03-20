@@ -1,5 +1,5 @@
 ---
-"kra-ui": patch
+'kra-ui': patch
 ---
 
 ### 相对 `master` 的变更摘要
