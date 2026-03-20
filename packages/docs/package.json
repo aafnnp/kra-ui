@@ -3,20 +3,41 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "dev": "vitepress dev",
-    "build": "vitepress build",
-    "build:cloudflare": "vitepress build && NITRO_PRESET=cloudflare_pages nitro build",
-    "build:vercel": "vitepress build && NITRO_PRESET=vercel_static nitro build",
-    "build:spa": "vitepress build && NITRO_PRESET=static nitro build",
-    "build:node": "vitepress build && nitro build",
-    "preview": "vitepress preview",
-    "preview:nitro": "node .output/server/index.mjs",
-    "clean": "rm -rf .vitepress/dist .output"
+    "generate": "node scripts/generate-docs-routes.mjs",
+    "predev": "pnpm run generate",
+    "prebuild": "pnpm run generate",
+    "dev": "react-router dev",
+    "build": "pnpm run validate:nav && react-router build",
+    "preview": "pnpm run build && wrangler dev --config build/server/wrangler.json",
+    "typegen": "wrangler types && react-router typegen",
+    "typecheck": "pnpm run typegen && tsc -b",
+    "validate:nav": "node scripts/validate-docs-nav.mjs",
+    "test:scripts": "node --test scripts/path-to-route.test.mjs",
+    "clean": "rm -rf build .react-router app/routes/generated"
+  },
+  "dependencies": {
+    "isbot": "^5.1.32",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^10.1.0",
+    "react-router": "^7.13.1",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
-    "h3": "2.0.1-rc.16",
-    "nitropack": "^2.13.1",
-    "vitepress": "^1.5.0"
+    "@cloudflare/vite-plugin": "^1.29.1",
+    "@react-router/dev": "^7.13.1",
+    "@react-router/fs-routes": "^7.13.1",
+    "@types/node": "^20.19.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "typescript": "~5.3.3",
+    "vite": "^6.3.0",
+    "vite-tsconfig-paths": "^5.1.4",
+    "wrangler": "^4.23.0"
   }
 }
