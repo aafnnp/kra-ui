@@ -2,7 +2,7 @@ node_modules
 lib
 dist
 .expo
-.vitepress/dist
 android
 ios
-
+packages/docs/build
+packages/docs/.react-router

@@ -130,6 +130,16 @@ function Tabs({
     [effectiveKey, animateIndicator],
   );
 
+  const renderIndicator = useCallback(
+    (testID: string) => (
+      <Animated.View
+        testID={testID}
+        style={[styles.indicator, { backgroundColor: theme.colors.primary }, indicatorStyle]}
+      />
+    ),
+    [theme.colors.primary, indicatorStyle],
+  );
+
   const renderTabBar = () => {
     const tabItems = items.map((item) => {
       const isActive = item.key === effectiveKey;
@@ -170,7 +180,10 @@ function Tabs({
     if (scrollable) {
       return (
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Box flexDirection="row">{tabItems}</Box>
+          <Box flexDirection="row" position="relative">
+            {tabItems}
+            {variant === 'underline' && renderIndicator('native-ui-tabs-indicator-scrollable')}
+          </Box>
         </ScrollView>
       );
     }
@@ -187,11 +200,9 @@ function Tabs({
       <Box borderBottomWidth={variant === 'underline' ? 1 : 0} borderColor="border">
         {renderTabBar()}
 
-        {variant === 'underline' && (
-          <Animated.View
-            style={[styles.indicator, { backgroundColor: theme.colors.primary }, indicatorStyle]}
-          />
-        )}
+        {variant === 'underline' &&
+          !scrollable &&
+          renderIndicator('native-ui-tabs-indicator-default')}
       </Box>
 
       {activeContent && (

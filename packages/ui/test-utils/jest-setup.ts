@@ -38,6 +38,7 @@ jest.mock('react-native-reanimated', () => {
       }
       return toValue;
     },
+    withSequence: (...values: unknown[]) => values[values.length - 1],
     runOnJS: (fn: mockUnknownFn) => fn,
   };
 });
